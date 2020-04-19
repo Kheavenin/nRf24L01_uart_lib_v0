@@ -21,12 +21,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "nRF24L01.h"
+#include "uart_interface.h"
+#include "generalPurposeLibrary.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,6 +39,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define UART_BUFFER_SIZE_TX 32
+#define UART_BUFFER_SIZE_RX 32
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -46,13 +51,15 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t uartTransmitBuffer[UART_BUFFER_SIZE_TX];
+uint8_t uartReceiveBuffer[UART_BUFFER_SIZE_RX];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
 
+/* USER CODE BEGIN PFP */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -91,8 +98,11 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+	sendString("\n\rPeriphery initialized.", &huart2);
+	HAL_UART_Receive_IT(&huart2, uartReceiveBuffer, 4);
+	sendString("\n\rUart set as listener.", &huart2);
   /* USER CODE END 2 */
  
  
@@ -102,7 +112,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+//		HAL_Delay(10);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -145,7 +155,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	HAL_UART_Receive_IT(&huart2, uartReceiveBuffer, 4);
+	sendString("\r\nData received.", &huart2);
+//	sendShortInteger(uartReceiveBuffer[0], &huart2);
+//	sendBuffer(uartReceiveBuffer,8, &huart2);
 
+}
 /* USER CODE END 4 */
 
 /**
