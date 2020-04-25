@@ -41,6 +41,8 @@
 /* USER CODE BEGIN PD */
 #define UART_BUFFER_SIZE_TX 32
 #define UART_BUFFER_SIZE_RX 32
+
+#define UART_READ_SIZE 16
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,8 +53,31 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t uartTransmitBuffer[UART_BUFFER_SIZE_TX];
-uint8_t uartReceiveBuffer[UART_BUFFER_SIZE_RX];
+/* Const */
+const char nrfCommandPreamble[] = { '#', 'n', 'r', 'f', '-' };
+
+const char nrfPowerUp[] = { 'p', 'w', 'r', '-', 'u', 'p' }; //power up
+const char nrfPowerDown[] = { 'p', 'w', 'r', '-', 'd', 'n' }; //power down
+
+const char nrfPowerTx0dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '0' };
+const char nrfPowerTx6dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '1' };
+const char nrfPowerTx12dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '2' };
+const char nrfPowerTx18dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '3' };
+
+const char nrfDataRate250kbps[] = { 'r', 'a', 't', 'e', '-', '0' };
+const char nrfDataRate1Mbps[] = { 'r', 'a', 't', 'e', '-', '1' };
+const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
+
+const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
+
+/* Variables */
+volatile uint8_t uartRx_flag = 0;
+
+/* Buffer, arrays */
+char uartTransmitBuffer[UART_BUFFER_SIZE_TX];
+char uartReceiveBuffer[UART_BUFFER_SIZE_RX];
+
+char uartTmpBuffer[UART_BUFFER_SIZE_RX];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -101,7 +126,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 	sendString("\n\rPeriphery initialized.", &huart2);
-	HAL_UART_Receive_IT(&huart2, uartReceiveBuffer, 4);
+	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
 	sendString("\n\rUart set as listener.", &huart2);
   /* USER CODE END 2 */
  
@@ -111,8 +136,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		/* UART print RX buffer */
+		if (uartRx_flag) {
+			sendString("\r\nData received.", &huart2); //log
+			HAL_Delay(100);
+			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);//copy characters to temporary buffer
+			if (memcmp(nrfCommandPreamble, uartTmpBuffer, 5) == 0) { //check four first chars - detect command
+				/* Find end of command*/
+				sendString("\r\n#nRF command detect.", &huart2); //log
+				uint32_t endLinePointer = (uint32_t) memchr(uartTmpBuffer, 0x0A,
+						strlen(uartTmpBuffer)); //find EOL mean LF
+				uint32_t endCommand = endLinePointer - (uint32_t) uartTmpBuffer
+						+ 1;
+
+				/* Check position of EOL to shortest command length. */
+				if (endCommand < 11)
+					sendString("\r\n#nRF command invalid.", &huart2);	//log
+
+				/* Detect command */
+
+
+
+			}
+
+
+
+			sendChar(uartReceiveBuffer[0], &huart2);
+
+
+
+			uartRx_flag = 0;
+		}
+
     /* USER CODE END WHILE */
-//		HAL_Delay(10);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -156,11 +213,8 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	HAL_UART_Receive_IT(&huart2, uartReceiveBuffer, 4);
-	sendString("\r\nData received.", &huart2);
-//	sendShortInteger(uartReceiveBuffer[0], &huart2);
-//	sendBuffer(uartReceiveBuffer,8, &huart2);
-
+	uartRx_flag = 1;
+	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
 }
 /* USER CODE END 4 */
 

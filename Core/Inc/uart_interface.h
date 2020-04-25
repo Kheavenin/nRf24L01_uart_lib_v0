@@ -20,10 +20,32 @@
 
 /*	User include files	*/
 
+/* Extern */
+
+extern const char nrfPowerUp[]; //power up
+extern const char nrfPowerDown[]; //power down
+
+extern const char nrfPowerTx0dBm[];
+extern const char nrfPowerTx6dBm[];
+extern const char nrfPowerTx12dBm[];
+extern const char nrfPowerTx18dBm[];
+
+extern const char nrfDataRate250kbps[];
+extern const char nrfDataRate1Mbps[];
+extern const char nrfDataRate2Mbps[];
+
+extern const char nrfChannel[];
+
+
 /* Functions's prototypes */
+
+uint8_t checkCommand(const char *str, const char *cmd, size_t strLen,
+		size_t cmdLen);
+
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 
 void sendString(const char *str, UART_HandleTypeDef *huart);
+void sendChar(char charakter, UART_HandleTypeDef *huart);
 
 void sendShortInteger(uint8_t number, UART_HandleTypeDef *huart);
 void sendInteger(uint16_t number, UART_HandleTypeDef *huart);

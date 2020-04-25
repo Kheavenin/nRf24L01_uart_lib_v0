@@ -15,6 +15,13 @@
 
 
 /* Functions's bodies */
+uint8_t checkCommand(const char *str, const char *cmd, size_t strLen,
+		size_t cmdLen) {
+	if ((cmdLen + 5 + 1) != strLen)
+		return 0;
+	/* First command */
+	strstr(str, cmd);
+}
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	if (size <= 0) {
@@ -31,8 +38,14 @@ void sendString(const char *str, UART_HandleTypeDef *huart) {
 	HAL_UART_Transmit_IT(huart, (uint8_t*) str, strlen(str));
 }
 
+void sendChar(char charakter, UART_HandleTypeDef *huart) {
+	char data[4];
+	size_t dataSize = sprintf(data, "%cb", charakter);
+	HAL_UART_Transmit_IT(huart, (uint8_t*) data, dataSize);
+}
+
 void sendShortInteger(uint8_t number, UART_HandleTypeDef *huart) {
-	char data[8];
+	char data[4];
 	size_t dataSize = sprintf(data, "%hd", number);
 	HAL_UART_Transmit_IT(huart, (uint8_t*) data, dataSize);
 }
