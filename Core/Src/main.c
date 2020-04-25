@@ -70,11 +70,10 @@ const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
 
 const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
 
-const char *nrfCommandTable[] = { nrfCommandPreamble, nrfPowerUp, nrfPowerDown,
+const char *nrfCommandTable[] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
-		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel
+		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
-};
 /* Variables */
 volatile uint8_t uartRx_flag = 0;
 
@@ -159,7 +158,8 @@ int main(void)
 					sendString("\r\n#nRF command invalid.", &huart2);	//log
 
 				/* Detect command */
-
+				checkCommand(uartTmpBuffer, nrfCommandTable,
+						sizeof(uartTmpBuffer), sizeof(nrfCommandTable));
 
 
 			}

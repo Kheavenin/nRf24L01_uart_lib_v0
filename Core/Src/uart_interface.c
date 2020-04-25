@@ -15,12 +15,18 @@
 
 
 /* Functions's bodies */
-uint8_t checkCommand(const char *str, size_t strLen) {
-	uint8_t minSizeCmd = 11;
-	if ((minSizeCmd) < strLen)
-		return 0;
+uint8_t checkCommand(const char *str, const char **cmdTab, size_t strLen,
+		size_t cmdLen) {
+	if (strLen < 11) //Check min size of command
+		return -1;
 	/* First command */
-
+	uint8_t i;
+	for (i = 0; i < cmdLen; i++) {
+		if (strstr(str, cmdTab[i])) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
