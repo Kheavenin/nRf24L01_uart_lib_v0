@@ -39,8 +39,7 @@ extern const char nrfChannel[];
 
 /* Functions's prototypes */
 
-uint8_t checkCommand(const char *str, const char *cmd, size_t strLen,
-		size_t cmdLen);
+uint8_t checkCommand(const char *str, size_t strLen);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 

@@ -15,12 +15,12 @@
 
 
 /* Functions's bodies */
-uint8_t checkCommand(const char *str, const char *cmd, size_t strLen,
-		size_t cmdLen) {
-	if ((cmdLen + 5 + 1) != strLen)
+uint8_t checkCommand(const char *str, size_t strLen) {
+	uint8_t minSizeCmd = 11;
+	if ((minSizeCmd) < strLen)
 		return 0;
 	/* First command */
-	strstr(str, cmd);
+
 }
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
