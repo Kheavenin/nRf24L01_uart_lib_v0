@@ -24,6 +24,9 @@
 #define PREMBLE_TABLE_SIZE 5
 #define COMMAND_TABLE_SIZE 10
 
+/* Extern */
+extern UART_HandleTypeDef huart2;
+
 /* Const */
 extern const char nrfCommandPreamble[PREMBLE_TABLE_SIZE];
 

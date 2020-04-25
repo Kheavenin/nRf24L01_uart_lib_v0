@@ -50,29 +50,50 @@ uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 	switch (commandNumber) {
 	case 0:
-		/* Execute first command */
+		/* Execute Power Up */
+//		pwrUp(nrfStruct);
+		sendString("\n\rExecuted 1st command.", &huart2);
+		return 1;
 		break;
 	case 1:
+//		pwrDown(nrfStruct);
+		sendString("\n\rExecuted 2nd command.", &huart2);
+		return 1;
 		break;
 	case 2:
+		sendString("\n\rExecuted 3rd command.", &huart2);
+		return 1;
 		break;
 	case 3:
+		sendString("\n\rExecuted 4th command.", &huart2);
+		return 1;
 		break;
 	case 4:
+		sendString("\n\rExecuted 5th command.", &huart2);
+		return 1;
 		break;
 	case 5:
+		sendString("\n\rExecuted 6th command.", &huart2);
+		return 1;
 		break;
 	case 6:
+		sendString("\n\rExecuted 7th command.", &huart2);
+		return 1;
 		break;
 	case 7:
+		sendString("\n\rExecuted 8th command.", &huart2);
+		return 1;
 		break;
 	case 8:
+		sendString("\n\rExecuted 9th command.", &huart2);
+		return 1;
 		break;
 	case 9:
-		break;
-	case 10:
+		sendString("\n\rExecuted 10th command.", &huart2);
+		return 1;
 		break;
 	default:
+		return 0;
 		break;
 	}
 
