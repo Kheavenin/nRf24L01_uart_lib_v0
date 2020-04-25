@@ -8,11 +8,29 @@
  *      Reference to HAL's uart structure passes as argument to all functions.
  */
 
-
-
 /*	User include files	*/
 #include "uart_interface.h"
 
+const char nrfCommandPreamble[PREMBLE_TABLE_SIZE] = { '#', 'n', 'r', 'f', '-' };
+
+const char nrfPowerUp[] = { 'p', 'w', 'r', '-', 'u', 'p' }; //power up
+const char nrfPowerDown[] = { 'p', 'w', 'r', '-', 'd', 'n' }; //power down
+
+const char nrfPowerTx0dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '0' };
+const char nrfPowerTx6dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '1' };
+const char nrfPowerTx12dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '2' };
+const char nrfPowerTx18dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '3' };
+
+const char nrfDataRate250kbps[] = { 'r', 'a', 't', 'e', '-', '0' };
+const char nrfDataRate1Mbps[] = { 'r', 'a', 't', 'e', '-', '1' };
+const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
+
+const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
+
+const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
+		nrfPowerTx0dBm,
+		nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm, nrfDataRate250kbps,
+		nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's bodies */
 uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
@@ -29,7 +47,7 @@ uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
 	return -1;
 }
 
-uint8_t executeCommand(nrfStruct_t nrfStruct, uint8_t commandNumber) {
+uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 	switch (commandNumber) {
 	case 0:
 		/* Execute first command */
@@ -57,6 +75,8 @@ uint8_t executeCommand(nrfStruct_t nrfStruct, uint8_t commandNumber) {
 	default:
 		break;
 	}
+
+	return 0;
 }
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {

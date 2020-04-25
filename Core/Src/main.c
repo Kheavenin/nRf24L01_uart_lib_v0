@@ -27,7 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "nRF24L01.h"
+
 #include "uart_interface.h"
 #include "generalPurposeLibrary.h"
 /* USER CODE END Includes */
@@ -114,6 +114,11 @@ int main(void)
 	sendString("\n\rPeriphery initialized.", &huart2);
 	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
 	sendString("\n\rUart set as listener.", &huart2);
+
+	/* nrf24L01+ struct init*/
+	nrfStruct_t *testStruct;
+	testStruct = nRF_Init(&hspi1, &htim1, CSN_GPIO_Port, CSN_Pin,
+	CE_GPIO_Port, CE_Pin);
   /* USER CODE END 2 */
  
  
@@ -127,31 +132,21 @@ int main(void)
 			sendString("\r\nData received.", &huart2); //log
 			HAL_Delay(100);
 			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);//copy characters to temporary buffer
-			if (memcmp(nrfCommandPreamble, uartTmpBuffer, 5) == 0) { //check four first chars - detect command
-				/* Find end of command*/
-				sendString("\r\n#nRF command detect.", &huart2); //log
-				uint32_t endLinePointer = (uint32_t) memchr(uartTmpBuffer, 0x0A,
-						strlen(uartTmpBuffer)); //find EOL mean LF
-				uint32_t endCommand = endLinePointer - (uint32_t) uartTmpBuffer
-						+ 1;
-
+			if (memcmp(nrfCommandPreamble, uartTmpBuffer, PREMBLE_TABLE_SIZE)
+					== 0) { //check four first chars - detect command
 				/* Check position of EOL to shortest command length. */
-				if (endCommand < 11)
+				if (strlen(uartTmpBuffer) < MINIMUM_COMMAND_SIZE)
 					sendString("\r\n#nRF command invalid.", &huart2);	//log
-
-				/* Detect command */
-				detectCommand(uartTmpBuffer, nrfCommandTable,
-						sizeof(uartTmpBuffer), sizeof(nrfCommandTable));
-
+				else {
+					/* Detect command */
+					uint8_t detectCommandNumber = detectCommand(uartTmpBuffer,
+							nrfCommandTable, strlen(uartTmpBuffer),
+							COMMAND_TABLE_SIZE);
+					executeCommand(testStruct, detectCommandNumber);
+				}
 
 			}
-
-
-
-			sendChar(uartReceiveBuffer[0], &huart2);
-
-
-
+//			sendChar(uartReceiveBuffer[0], &huart2);
 			uartRx_flag = 0;
 		}
 
