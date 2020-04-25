@@ -15,7 +15,7 @@
 
 
 /* Functions's bodies */
-uint8_t checkCommand(const char *str, const char **cmdTab, size_t strLen,
+uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
 		size_t cmdLen) {
 	if (strLen < 11) //Check min size of command
 		return -1;
@@ -27,6 +27,36 @@ uint8_t checkCommand(const char *str, const char **cmdTab, size_t strLen,
 		}
 	}
 	return -1;
+}
+
+uint8_t executeCommand(nrfStruct_t nrfStruct, uint8_t commandNumber) {
+	switch (commandNumber) {
+	case 0:
+		/* Execute first command */
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	case 7:
+		break;
+	case 8:
+		break;
+	case 9:
+		break;
+	case 10:
+		break;
+	default:
+		break;
+	}
 }
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {

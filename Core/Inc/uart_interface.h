@@ -21,26 +21,29 @@
 /*	User include files	*/
 
 /* Extern */
+const char nrfCommandPreamble[] = { '#', 'n', 'r', 'f', '-' };
 
-extern const char nrfPowerUp[]; //power up
-extern const char nrfPowerDown[]; //power down
+const char nrfPowerUp[] = { 'p', 'w', 'r', '-', 'u', 'p' }; //power up
+const char nrfPowerDown[] = { 'p', 'w', 'r', '-', 'd', 'n' }; //power down
 
-extern const char nrfPowerTx0dBm[];
-extern const char nrfPowerTx6dBm[];
-extern const char nrfPowerTx12dBm[];
-extern const char nrfPowerTx18dBm[];
+const char nrfPowerTx0dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '0' };
+const char nrfPowerTx6dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '1' };
+const char nrfPowerTx12dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '2' };
+const char nrfPowerTx18dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '3' };
 
-extern const char nrfDataRate250kbps[];
-extern const char nrfDataRate1Mbps[];
-extern const char nrfDataRate2Mbps[];
+const char nrfDataRate250kbps[] = { 'r', 'a', 't', 'e', '-', '0' };
+const char nrfDataRate1Mbps[] = { 'r', 'a', 't', 'e', '-', '1' };
+const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
 
-extern const char nrfChannel[];
+const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
 
-extern const char *nrfCommandTable[];
+const char *nrfCommandTable[] = { nrfPowerUp, nrfPowerDown, nrfPowerTx0dBm,
+		nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm, nrfDataRate250kbps,
+		nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's prototypes */
 
-uint8_t checkCommand(const char *str, const char **cmdTab, size_t strLen,
+uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
 		size_t cmdLen);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);

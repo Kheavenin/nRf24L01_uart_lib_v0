@@ -54,25 +54,7 @@
 
 /* USER CODE BEGIN PV */
 /* Const */
-const char nrfCommandPreamble[] = { '#', 'n', 'r', 'f', '-' };
 
-const char nrfPowerUp[] = { 'p', 'w', 'r', '-', 'u', 'p' }; //power up
-const char nrfPowerDown[] = { 'p', 'w', 'r', '-', 'd', 'n' }; //power down
-
-const char nrfPowerTx0dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '0' };
-const char nrfPowerTx6dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '1' };
-const char nrfPowerTx12dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '2' };
-const char nrfPowerTx18dBm[] = { 'p', 'w', 'r', '-', 't', 'x', '-', '3' };
-
-const char nrfDataRate250kbps[] = { 'r', 'a', 't', 'e', '-', '0' };
-const char nrfDataRate1Mbps[] = { 'r', 'a', 't', 'e', '-', '1' };
-const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
-
-const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
-
-const char *nrfCommandTable[] = { nrfPowerUp, nrfPowerDown,
-		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
-		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Variables */
 volatile uint8_t uartRx_flag = 0;
@@ -158,7 +140,7 @@ int main(void)
 					sendString("\r\n#nRF command invalid.", &huart2);	//log
 
 				/* Detect command */
-				checkCommand(uartTmpBuffer, nrfCommandTable,
+				detectCommand(uartTmpBuffer, nrfCommandTable,
 						sizeof(uartTmpBuffer), sizeof(nrfCommandTable));
 
 
