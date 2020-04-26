@@ -28,8 +28,8 @@ const char nrfDataRate2Mbps[] = { 'r', 'a', 't', 'e', '-', '2' };
 const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
 
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
-		nrfPowerTx0dBm,
-		nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm, nrfDataRate250kbps,
+		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
+		nrfDataRate250kbps,
 		nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's bodies */
@@ -54,46 +54,58 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 		/* Execute Power Up */
 //		pwrUp(nrfStruct);
 		sendString("\n\rExecuted 1st command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 1:
 //		pwrDown(nrfStruct);
 		sendString("\n\rExecuted 2nd command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 2:
 		sendString("\n\rExecuted 3rd command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 3:
 		sendString("\n\rExecuted 4th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 4:
 		sendString("\n\rExecuted 5th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 5:
 		sendString("\n\rExecuted 6th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 6:
 		sendString("\n\rExecuted 7th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 7:
 		sendString("\n\rExecuted 8th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 8:
 		sendString("\n\rExecuted 9th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	case 9:
 		sendString("\n\rExecuted 10th command.", &huart2);
+		HAL_Delay(50);
 		return 1;
 		break;
 	default:
+		sendString("\n\rInvalid command.", &huart2);
+		HAL_Delay(50);
 		return 0;
 		break;
 	}

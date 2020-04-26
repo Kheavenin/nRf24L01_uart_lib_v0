@@ -155,6 +155,9 @@ int main(void)
 					executeCommand(testStruct, detectCommandNumber);
 				}
 			}
+			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
+			UART_READ_SIZE);
+
 			uartRx_flag = 0;
 
 		}
