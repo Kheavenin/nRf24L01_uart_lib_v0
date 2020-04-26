@@ -48,8 +48,7 @@ extern const char *nrfCommandTable[COMMAND_TABLE_SIZE];
 
 /* Functions's prototypes */
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber);
-uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
-		size_t cmdLen);
+uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 
@@ -60,5 +59,7 @@ void sendShortInteger(uint8_t number, UART_HandleTypeDef *huart);
 void sendInteger(uint16_t number, UART_HandleTypeDef *huart);
 void sendLongInteger(uint32_t number, UART_HandleTypeDef *huart);
 void sendFloat(float number, uint8_t pointNumber, UART_HandleTypeDef *huart);
+
+uint8_t resetChar(char *buf, size_t bufSize);
 
 #endif /* INC_UART_INTERFACE_H_ */

@@ -29,7 +29,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "uart_interface.h"
-#include "generalPurposeLibrary.h"
+//#include "generalPurposeLibrary.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,7 +68,6 @@ char uartTmpBuffer[UART_BUFFER_SIZE_RX];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-
 /* USER CODE BEGIN PFP */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
@@ -112,7 +111,14 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 	sendString("\n\rPeriphery initialized.", &huart2);
+	HAL_Delay(200);
+
+	HAL_TIM_Base_Start(&htim1);
+	sendString("\n\rTIM start counting.", &huart2);
+	HAL_Delay(200);
+
 	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
+	HAL_Delay(200);
 	sendString("\n\rUart set as listener.", &huart2);
 
 	/* nrf24L01+ struct init*/
@@ -129,9 +135,14 @@ int main(void)
   {
 		/* UART print RX buffer */
 		if (uartRx_flag) {
+			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE); //copy characters to temporary buffer
+			resetChar(uartReceiveBuffer, sizeof(uartReceiveBuffer));
+			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
+			UART_READ_SIZE);
+
 			sendString("\r\nData received.", &huart2); //log
 			HAL_Delay(100);
-			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);//copy characters to temporary buffer
+
 			if (memcmp(nrfCommandPreamble, uartTmpBuffer, PREMBLE_TABLE_SIZE)
 					== 0) { //check four first chars - detect command
 				/* Check position of EOL to shortest command length. */
@@ -140,14 +151,12 @@ int main(void)
 				else {
 					/* Detect command */
 					uint8_t detectCommandNumber = detectCommand(uartTmpBuffer,
-							nrfCommandTable, strlen(uartTmpBuffer),
-							COMMAND_TABLE_SIZE);
+							nrfCommandTable, strlen(uartTmpBuffer));
 					executeCommand(testStruct, detectCommandNumber);
 				}
-
 			}
-//			sendChar(uartReceiveBuffer[0], &huart2);
 			uartRx_flag = 0;
+
 		}
 
     /* USER CODE END WHILE */
@@ -168,12 +177,13 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL16;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -196,7 +206,6 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	uartRx_flag = 1;
-	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
 }
 /* USER CODE END 4 */
 

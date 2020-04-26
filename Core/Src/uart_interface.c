@@ -33,14 +33,15 @@ const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's bodies */
-uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen,
-		size_t cmdLen) {
-	if (strLen < 11) //Check min size of command
+uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
+	if (strLen < MINIMUM_COMMAND_SIZE) //Check min size of command
 		return -1;
 	/* First command */
 	uint8_t i;
-	for (i = 0; i < cmdLen; i++) {
-		if (strstr(str, cmdTab[i])) {
+	char *p = NULL;
+	for (i = 0; i < COMMAND_TABLE_SIZE; i++) {
+		p = strstr(str, cmdTab[i]);
+		if (p != NULL) {
 			return i;
 		}
 	}
@@ -100,6 +101,7 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 	return 0;
 }
 
+
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	if (size <= 0) {
 		return 0;
@@ -110,6 +112,7 @@ uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	}
 	return 1;
 }
+
 
 void sendString(const char *str, UART_HandleTypeDef *huart) {
 	HAL_UART_Transmit_IT(huart, (uint8_t*) str, strlen(str));
@@ -172,4 +175,14 @@ void sendFloat(float number, uint8_t pointNumber, UART_HandleTypeDef *huart) {
 	HAL_UART_Transmit_IT(huart, (uint8_t*) data, dataSize);
 }
 
-
+uint8_t resetChar(char *buf, size_t bufSize) {
+	if (bufSize <= 0 || bufSize > 256)
+		return 0;
+	else {
+		uint8_t i;
+		for (i = 0; i < (bufSize - 1); i++) {
+			buf[i] = 0x00;
+		}
+		return 1;
+	}
+}
