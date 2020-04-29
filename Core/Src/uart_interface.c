@@ -25,12 +25,11 @@ const char nrfDataRate250kbps[] = { "rate-0" };
 const char nrfDataRate1Mbps[] = { "rate-1" };
 const char nrfDataRate2Mbps[] = { "rate-2" };
 
-const char nrfChannel[] = { 'c', 'h', 'a', 'n', 'n', 'e', 'l', '-' };
+const char nrfChannel[] = { "ch-" };
 
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
-		nrfDataRate250kbps,
-		nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
+		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's bodies */
 uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
@@ -100,6 +99,9 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 		break;
 	case 9:
 		sendString("\n\rExecuted 10th command.", &huart2);
+
+
+
 		HAL_Delay(50);
 		return 1;
 		break;
@@ -113,6 +115,19 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 	return 0;
 }
 
+uint8_t channelDetect(const char *str, size_t strLen) {
+	if (strLen < 3) {
+		return -1;
+	}
+
+	char *p = NULL;
+	char chNum[4];
+	p = strstr(str, nrfCommandTable[9]); 	//find position of command in string
+	strncpy(chNum, (p + 3), 3);	//first '3' is offset of command 'ch-', necessary to find namber of channel
+
+	uint8_t channel = atoi(chNum);	//conversion string channel number to u_int
+	return channel;
+}
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	if (size <= 0) {

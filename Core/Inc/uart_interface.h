@@ -15,8 +15,10 @@
 #include "main.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
 #include "nRF24L01.h"
 
 /* Define */
