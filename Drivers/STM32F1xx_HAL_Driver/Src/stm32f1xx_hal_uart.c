@@ -1277,7 +1277,6 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     /* Enable the UART Data Register not empty Interrupt */
     __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
 
-
     return HAL_OK;
   }
   else
@@ -2144,8 +2143,6 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     return;
   } /* End if some error occurs */
 
-
-
   /* UART in mode Transmitter ------------------------------------------------*/
   if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
   {
@@ -2160,8 +2157,6 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     return;
   }
 }
-
-
 
 /**
   * @brief  Tx Transfer completed callbacks.

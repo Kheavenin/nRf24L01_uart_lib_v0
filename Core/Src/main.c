@@ -127,10 +127,7 @@ int main(void)
 	CE_GPIO_Port, CE_Pin);
   /* USER CODE END 2 */
  
-	/** Begin user changes **/
-	/* Enable the UART Idle Interrupt */
-	__HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-	/** End f user changes */
+ 
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -162,7 +159,6 @@ int main(void)
 			UART_READ_SIZE);
 
 			uartRx_flag = 0;
-
 		}
 
     /* USER CODE END WHILE */
@@ -207,6 +203,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  /** Enables the Clock Security System 
+  */
+  HAL_RCC_EnableCSS();
 }
 
 /* USER CODE BEGIN 4 */

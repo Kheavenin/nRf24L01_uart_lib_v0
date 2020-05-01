@@ -13,19 +13,19 @@
 
 const char nrfCommandPreamble[PREMBLE_TABLE_SIZE] = { '#', 'n', 'r', 'f', '-' };
 
-const char nrfPowerUp[] = { "pwr-up" }; //power up
+const char nrfPowerUp[] = { "pwr-up" }; //power up  //11
 const char nrfPowerDown[] = { "pwr-dn" }; //power down
 
-const char nrfPowerTx0dBm[] = { "pwr-tx-0" };
+const char nrfPowerTx0dBm[] = { "pwr-tx-0" }; //13
 const char nrfPowerTx6dBm[] = { "pwr-tx-1" };
 const char nrfPowerTx12dBm[] = { "pwr-tx-2" };
 const char nrfPowerTx18dBm[] = { "pwr-tx-3" };
 
-const char nrfDataRate250kbps[] = { "rate-0" };
+const char nrfDataRate250kbps[] = { "rate-0" }; //11
 const char nrfDataRate1Mbps[] = { "rate-1" };
 const char nrfDataRate2Mbps[] = { "rate-2" };
 
-const char nrfChannel[] = { "ch-" };
+const char nrfChannel[] = { "ch-" }; //11
 
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
