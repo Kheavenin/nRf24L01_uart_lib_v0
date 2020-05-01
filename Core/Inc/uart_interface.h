@@ -46,10 +46,12 @@ extern const char *nrfCommandTable[COMMAND_TABLE_SIZE];
 
 extern const char nrfEnter[];
 extern const char nrfExit[];
+extern const char nrfPrompt[];
 
 /* Functions's prototypes */
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber);
 int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen);
+int8_t channelDetect(const char *str, size_t strLen);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 
