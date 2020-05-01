@@ -42,7 +42,7 @@
 #define UART_BUFFER_SIZE_TX 32
 #define UART_BUFFER_SIZE_RX 32
 
-#define UART_READ_SIZE 16
+#define UART_READ_SIZE 14
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -158,6 +158,7 @@ int main(void)
 			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
 			UART_READ_SIZE);
 
+			resetChar(uartTmpBuffer, sizeof(uartTmpBuffer));
 			uartRx_flag = 0;
 
 		}
