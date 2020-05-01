@@ -57,6 +57,7 @@
 
 
 /* Variables */
+volatile uint8_t uartPromptFlag = 0;
 volatile uint8_t uartRx_flag = 0;
 
 /* Buffer, arrays */
@@ -135,13 +136,43 @@ int main(void)
   {
 		/* UART print RX buffer */
 		if (uartRx_flag) {
-			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE); //copy characters to temporary buffer
+			sendString("\r\nData received.", &huart2); //log
+			HAL_Delay(100);
+
+			/* copy characters to temporary buffer */
+			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);
+
+			/* Reset buffer and start UART listening */
 			resetChar(uartReceiveBuffer, sizeof(uartReceiveBuffer));
 			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
 			UART_READ_SIZE);
 
-			sendString("\r\nData received.", &huart2); //log
-			HAL_Delay(100);
+			/* Main condition - data size */
+			if (strlen(uartTmpBuffer) < MINIMUM_COMMAND_SIZE) {
+				sendString("\r\n#nRF command invalid.", &huart2);	//log
+			}
+
+			/* detect entrance to nRF and set prompt flag */
+			if (uartPromptFlag == 0) {
+				if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
+					uartPromptFlag = 1;
+					sendString(nrfPrompt, &huart2);
+					sendString("nRF24L01 access available\n", &huart2);
+				}
+			}
+
+			/* If nrf mode available check and execute command */
+			if (uartPromptFlag == 1) {
+				/* Check command as exit command */
+				if (strstr(uartTmpBuffer, nrfExit) != NULL) {
+					sendString(nrfPrompt, &huart2);
+					sendString("nRF24L01 access not available\n", &huart2);
+				}
+				/* If not exit - check as others commands */
+				else {
+
+				}
+			}
 
 			if (memcmp(nrfCommandPreamble, uartTmpBuffer, PREMBLE_TABLE_SIZE)
 					== 0) { //check four first chars - detect command

@@ -11,28 +11,33 @@
 /*	User include files	*/
 #include "uart_interface.h"
 
+
 const char nrfCommandPreamble[PREMBLE_TABLE_SIZE] = { '#', 'n', 'r', 'f', '-' };
 
-const char nrfPowerUp[] = { "pwr-up" }; //power up
-const char nrfPowerDown[] = { "pwr-dn" }; //power down
+const char nrfPowerUp[] = { "#nrf-pwr-up" }; //power up 		//size 12 with \0
+const char nrfPowerDown[] = { "#nrf-pwr-dn" }; //power down		//size 12 with \0
 
-const char nrfPowerTx0dBm[] = { "pwr-tx-0" };
-const char nrfPowerTx6dBm[] = { "pwr-tx-1" };
-const char nrfPowerTx12dBm[] = { "pwr-tx-2" };
-const char nrfPowerTx18dBm[] = { "pwr-tx-3" };
+const char nrfPowerTx0dBm[] = { "#nrf-pwr-tx-0" };			//size 14 with \0
+const char nrfPowerTx6dBm[] = { "#nrf-pwr-tx-1" };			//size 14 with \0
+const char nrfPowerTx12dBm[] = { "#nrf-pwr-tx-2" };			//size 14 with \0
+const char nrfPowerTx18dBm[] = { "#nrf-pwr-tx-3" };			//size 14 with \0
 
-const char nrfDataRate250kbps[] = { "rate-0" };
-const char nrfDataRate1Mbps[] = { "rate-1" };
-const char nrfDataRate2Mbps[] = { "rate-2" };
+const char nrfDataRate250kbps[] = { "#nrf-rate-0" };		//size 12 with \0
+const char nrfDataRate1Mbps[] = { "#nrf-rate-1" };			//size 12 with \0
+const char nrfDataRate2Mbps[] = { "#nrf-rate-2" };			//size 12 with \0
 
-const char nrfChannel[] = { "ch-" };
+const char nrfChannel[] = { "#nrf-ch-" };		//size 9 with \0
+
+const char nrfEnter[] = { "#nrf-enter" };		//size 11 with \0
+const char nrfExit[] = { "#nrf-exit" };			//size 10 with \0
+const char nrfPrompt[] = { "#nrf> " };
 
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
 /* Functions's bodies */
-uint8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
+int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
 	if (strLen < MINIMUM_COMMAND_SIZE) //Check min size of command
 		return -1;
 	/* First command */
