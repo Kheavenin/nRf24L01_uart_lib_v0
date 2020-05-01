@@ -50,7 +50,8 @@ int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
 	return -1;
 }
 
-uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
+uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
+		const char *str) {
 	switch (commandNumber) {
 	case 0:
 		/* Execute Power Up */
@@ -101,9 +102,15 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 		return 1;
 		break;
 	case 9:
-		sendString("\n\rExecuted 10th command.", &huart2);
+		sendString("\n\rExecuted change of RF channel.", &huart2); //log
+		int8_t channel = channelDetect(str, strlen(str));
+		if (channel != -1) {
+			//change channel command
+			return 1;
+		}
+
 		HAL_Delay(50);
-		return 1;
+		return 0;
 		break;
 	default:
 		sendString("\n\rInvalid command.", &huart2);
@@ -116,7 +123,7 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber) {
 }
 
 int8_t channelDetect(const char *str, size_t strLen) {
-	if (strLen < 3) {
+	if (strLen < 9) {
 		return -1;
 	}
 

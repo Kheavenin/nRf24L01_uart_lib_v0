@@ -168,7 +168,8 @@ int main(void)
 								uartTmpBuffer, nrfCommandTable,
 								strlen(uartTmpBuffer));
 						/* Execute command */
-						executeCommand(testStruct, detectCommandNumber);
+						executeCommand(testStruct, detectCommandNumber,
+								uartTmpBuffer);
 					}
 				}
 				/* End of positive part of condtion */
