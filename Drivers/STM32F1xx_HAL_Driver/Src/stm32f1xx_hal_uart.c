@@ -1277,6 +1277,10 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     /* Enable the UART Data Register not empty Interrupt */
     __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
 
+		/** Begin user changes **/
+		/* Enable the UART Idle Interrupt */
+		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
+		/** End f user changes */
     return HAL_OK;
   }
   else
@@ -2143,6 +2147,15 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     return;
   } /* End if some error occurs */
 
+	/** Begin of user changes **/
+	/** Added check idle flag */
+	if (((isrflags & USART_SR_IDLE) != RESET)
+			&& ((cr1its & USART_CR1_IDLEIE) != RESET)) {
+		HAL_UART_IdleCpltCallbak(huart);
+		return;
+	}
+	/** End of user changes**/
+
   /* UART in mode Transmitter ------------------------------------------------*/
   if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
   {
@@ -2157,6 +2170,16 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     return;
   }
 }
+
+/** User changes */
+__weak void HAL_UART_IdleCpltCallbak(UART_HandleTypeDef *huart) {
+	/* Prevent unused argument(s) compilation warning */
+	UNUSED(huart);
+	/* NOTE: This function should not be modified, when the callback is needed,
+	 the HAL_UART_IdleCpltCallbak could be implemented in the user file
+	 */
+}
+
 
 /**
   * @brief  Tx Transfer completed callbacks.
