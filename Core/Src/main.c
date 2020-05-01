@@ -70,7 +70,6 @@ char uartTmpBuffer[UART_BUFFER_SIZE_RX];
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-void HAL_UART_IdleCpltCallbak(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -128,7 +127,10 @@ int main(void)
 	CE_GPIO_Port, CE_Pin);
   /* USER CODE END 2 */
  
- 
+	/** Begin user changes **/
+	/* Enable the UART Idle Interrupt */
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
+	/** End f user changes */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -212,12 +214,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	uartRx_flag = 1;
 }
 
-void HAL_UART_IdleCpltCallbak(UART_HandleTypeDef *huart) {
-	if (USART2 == huart->Instance) {
-		huart->RxXferCount = 0;
-	}
-	__HAL_UART_CLEAR_IDLEFLAG(huart);
-}
+
 /* USER CODE END 4 */
 
 /**
