@@ -142,54 +142,46 @@ int main(void)
 			/* copy characters to temporary buffer */
 			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);
 
-			/* Reset buffer and start UART listening */
-			resetChar(uartReceiveBuffer, sizeof(uartReceiveBuffer));
-			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
-			UART_READ_SIZE);
-
 			/* Main condition - data size */
-			if (strlen(uartTmpBuffer) < MINIMUM_COMMAND_SIZE) {
+			if (strlen(uartTmpBuffer) >= MINIMUM_COMMAND_SIZE) {
+
+				/* detect entrance to nRF and set prompt flag */
+				if (uartPromptFlag == 0) {
+					if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
+						uartPromptFlag = 1;
+						sendString(nrfPrompt, &huart2);
+						sendString("nRF24L01 access available\n", &huart2);
+					}
+				}
+
+				/* If nrf mode available check and execute command */
+				if (uartPromptFlag == 1) {
+					/* Check command as exit command */
+					if (strstr(uartTmpBuffer, nrfExit) != NULL) {
+						sendString(nrfPrompt, &huart2);
+						sendString("nRF24L01 access not available\n", &huart2);
+					}
+					/* If not exit command - check as others commands */
+					else {
+						/* Detect command */
+						uint8_t detectCommandNumber = detectCommand(
+								uartTmpBuffer, nrfCommandTable,
+								strlen(uartTmpBuffer));
+						/* Execute command */
+						executeCommand(testStruct, detectCommandNumber);
+					}
+				}
+				/* End of positive part of condtion */
+			} else {
 				sendString("\r\n#nRF command invalid.", &huart2);	//log
 			}
 
-			/* detect entrance to nRF and set prompt flag */
-			if (uartPromptFlag == 0) {
-				if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
-					uartPromptFlag = 1;
-					sendString(nrfPrompt, &huart2);
-					sendString("nRF24L01 access available\n", &huart2);
-				}
-			}
-
-			/* If nrf mode available check and execute command */
-			if (uartPromptFlag == 1) {
-				/* Check command as exit command */
-				if (strstr(uartTmpBuffer, nrfExit) != NULL) {
-					sendString(nrfPrompt, &huart2);
-					sendString("nRF24L01 access not available\n", &huart2);
-				}
-				/* If not exit - check as others commands */
-				else {
-
-				}
-			}
-
-			if (memcmp(nrfCommandPreamble, uartTmpBuffer, PREMBLE_TABLE_SIZE)
-					== 0) { //check four first chars - detect command
-				/* Check position of EOL to shortest command length. */
-				if (strlen(uartTmpBuffer) < MINIMUM_COMMAND_SIZE)
-					sendString("\r\n#nRF command invalid.", &huart2);	//log
-				else {
-					/* Detect command */
-					uint8_t detectCommandNumber = detectCommand(uartTmpBuffer,
-							nrfCommandTable, strlen(uartTmpBuffer));
-					executeCommand(testStruct, detectCommandNumber);
-				}
-			}
+			/* Reset buffers and start UART listening */
+			resetChar(uartReceiveBuffer, sizeof(uartReceiveBuffer));
 			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
 			UART_READ_SIZE);
-
 			resetChar(uartTmpBuffer, sizeof(uartTmpBuffer));
+			/* Reset flag */
 			uartRx_flag = 0;
 
 		}

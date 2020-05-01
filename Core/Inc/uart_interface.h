@@ -22,16 +22,13 @@
 #include "nRF24L01.h"
 
 /* Define */
-#define MINIMUM_COMMAND_SIZE 11
-#define PREMBLE_TABLE_SIZE 5
+#define MINIMUM_COMMAND_SIZE 9
 #define COMMAND_TABLE_SIZE 10
 
 /* Extern */
 extern UART_HandleTypeDef huart2;
 
 /* Const */
-extern const char nrfCommandPreamble[PREMBLE_TABLE_SIZE];
-
 extern const char nrfPowerUp[];
 extern const char nrfPowerDown[];
 
