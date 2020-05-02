@@ -55,17 +55,20 @@ extern const char nrfPrompt[];
 
 typedef struct {
 	nrfStruct_t *nrfStruct;
-	UART_HandleTypeDef *huart;
+	UART_HandleTypeDef *nrfUartStruct;
 
 	uint8_t uartIrqFlag;
 	uint8_t uartPromptFlag;
 
 	char uartTxBuffer[UART_BUFFER_SIZE_TX];
-	char uartRXBuffer[UART_BUFFER_SIZE_RX];
+	char uartRxBuffer[UART_BUFFER_SIZE_RX];
 	char uartTemporaryBuffer[UART_BUFFER_SIZE_TMP];
 
 } nRF_UartStruct_t;
 
+
+nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
+		UART_HandleTypeDef *huart);
 
 /* Functions's prototypes */
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,

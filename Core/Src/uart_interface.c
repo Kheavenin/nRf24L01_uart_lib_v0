@@ -34,7 +34,25 @@ const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
+nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
+		UART_HandleTypeDef *huart) {
 
+	/* Creat struct */
+	static nRF_UartStruct_t nrfUartStruct;
+	static nRF_UartStruct_t *pnrfUartStruct = &nrfUartStruct;
+
+	pnrfUartStruct->nrfStruct = nrfStruct;
+	pnrfUartStruct->nrfUartStruct = huart;
+
+	pnrfUartStruct->uartIrqFlag = 0;
+	pnrfUartStruct->uartPromptFlag = 0;
+
+	resetChar(pnrfUartStruct->uartTxBuffer, UART_BUFFER_SIZE_TX);
+	resetChar(pnrfUartStruct->uartRxBuffer, UART_BUFFER_SIZE_RX);
+	resetChar(pnrfUartStruct->uartTemporaryBuffer, UART_BUFFER_SIZE_TMP);
+
+	return pnrfUartStruct;
+}
 
 /* Functions's bodies */
 int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
