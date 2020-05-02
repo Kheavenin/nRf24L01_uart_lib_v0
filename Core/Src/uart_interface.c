@@ -55,15 +55,13 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 }
 
 /* Functions's bodies */
-int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
+int8_t detectCommand(const char *str, size_t strLen) {
 	if (strLen < MINIMUM_COMMAND_SIZE) //Check min size of command
 		return -1;
 	/* First command */
 	uint8_t i;
-	char *p = NULL;
 	for (i = 0; i < COMMAND_TABLE_SIZE; i++) {
-		p = strstr(str, cmdTab[i]);
-		if (p != NULL) {
+		if (strstr(str, nrfCommandTable[i]) != NULL) {
 			return i;
 		}
 	}

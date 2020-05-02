@@ -168,8 +168,7 @@ int main(void)
 					else {
 						/* Detect command */
 						uint8_t detectCommandNumber = detectCommand(
-								uartTmpBuffer, nrfCommandTable,
-								strlen(uartTmpBuffer));
+								uartTmpBuffer, strlen(uartTmpBuffer));
 						/* Execute command */
 						sendString(nrfPrompt, &huart2); //print prompt
 						HAL_Delay(10);

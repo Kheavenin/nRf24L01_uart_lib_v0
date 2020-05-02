@@ -73,7 +73,7 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 /* Functions's prototypes */
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 		const char *str);
-int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen);
+int8_t detectCommand(const char *str, size_t strLen);
 int8_t channelDetect(const char *str, size_t strLen);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
