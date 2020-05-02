@@ -22,7 +22,11 @@
 #include "nRF24L01.h"
 
 /* Define */
-#define MINIMUM_COMMAND_SIZE 9
+
+#define UART_BUFFER_SIZE_TX 32
+#define UART_BUFFER_SIZE_RX 32
+
+#define MINIMUM_COMMAND_SIZE 9 //8
 #define COMMAND_TABLE_SIZE 10
 
 /* Extern */

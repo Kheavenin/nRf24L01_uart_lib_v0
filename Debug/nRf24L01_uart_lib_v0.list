@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00003954  0800010c  0800010c  0001010c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000003c8  08003a60  08003a60  00013a60  2**2
+  2 .rodata       000003b8  08003a60  08003a60  00013a60  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08003e28  08003e28  00020208  2**0
+  3 .ARM.extab    00000000  08003e18  08003e18  00020208  2**0
                   CONTENTS
-  4 .ARM          00000000  08003e28  08003e28  00020208  2**0
+  4 .ARM          00000000  08003e18  08003e18  00020208  2**0
                   CONTENTS
-  5 .preinit_array 00000000  08003e28  08003e28  00020208  2**0
+  5 .preinit_array 00000000  08003e18  08003e18  00020208  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08003e28  08003e28  00013e28  2**2
+  6 .init_array   00000004  08003e18  08003e18  00013e18  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08003e2c  08003e2c  00013e2c  2**2
+  7 .fini_array   00000004  08003e1c  08003e1c  00013e1c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000208  20000000  08003e30  00020000  2**2
+  8 .data         00000208  20000000  08003e20  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          0000019c  20000208  08004038  00020208  2**2
+  9 .bss          0000019c  20000208  08004028  00020208  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200003a4  08004038  000203a4  2**0
+ 10 ._user_heap_stack 00000604  200003a4  08004028  000203a4  2**0
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020208  2**0
                   CONTENTS, READONLY
@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_macro  00014d64  00000000  00000000  00034f88  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000bf2f  00000000  00000000  00049cec  2**0
+ 17 .debug_line   0000bf30  00000000  00000000  00049cec  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000752d8  00000000  00000000  00055c1b  2**0
+ 18 .debug_str    000752d8  00000000  00000000  00055c1c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000caef3  2**0
+ 19 .comment      0000007b  00000000  00000000  000caef4  2**0
                   CONTENTS, READONLY
  20 .debug_frame  0000483c  00000000  00000000  000caf70  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -343,19 +343,19 @@ int main(void)
  80002d6:	f000 fd41 	bl	8000d5c <MX_TIM1_Init>
   /* USER CODE BEGIN 2 */
 	sendString("\n\rPeriphery initialized.", &huart2);
- 80002da:	494c      	ldr	r1, [pc, #304]	; (800040c <main+0x150>)
- 80002dc:	484c      	ldr	r0, [pc, #304]	; (8000410 <main+0x154>)
+ 80002da:	494d      	ldr	r1, [pc, #308]	; (8000410 <main+0x154>)
+ 80002dc:	484d      	ldr	r0, [pc, #308]	; (8000414 <main+0x158>)
  80002de:	f000 fec5 	bl	800106c <sendString>
 	HAL_Delay(200);
  80002e2:	20c8      	movs	r0, #200	; 0xc8
  80002e4:	f000 fff2 	bl	80012cc <HAL_Delay>
 
 	HAL_TIM_Base_Start(&htim1);
- 80002e8:	484a      	ldr	r0, [pc, #296]	; (8000414 <main+0x158>)
+ 80002e8:	484b      	ldr	r0, [pc, #300]	; (8000418 <main+0x15c>)
  80002ea:	f002 fc8a 	bl	8002c02 <HAL_TIM_Base_Start>
 	sendString("\n\rTIM start counting.", &huart2);
- 80002ee:	4947      	ldr	r1, [pc, #284]	; (800040c <main+0x150>)
- 80002f0:	4849      	ldr	r0, [pc, #292]	; (8000418 <main+0x15c>)
+ 80002ee:	4948      	ldr	r1, [pc, #288]	; (8000410 <main+0x154>)
+ 80002f0:	484a      	ldr	r0, [pc, #296]	; (800041c <main+0x160>)
  80002f2:	f000 febb 	bl	800106c <sendString>
 	HAL_Delay(200);
  80002f6:	20c8      	movs	r0, #200	; 0xc8
@@ -363,15 +363,15 @@ int main(void)
 
 	HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer, UART_READ_SIZE);
  80002fc:	220e      	movs	r2, #14
- 80002fe:	4947      	ldr	r1, [pc, #284]	; (800041c <main+0x160>)
- 8000300:	4842      	ldr	r0, [pc, #264]	; (800040c <main+0x150>)
+ 80002fe:	4948      	ldr	r1, [pc, #288]	; (8000420 <main+0x164>)
+ 8000300:	4843      	ldr	r0, [pc, #268]	; (8000410 <main+0x154>)
  8000302:	f002 ff26 	bl	8003152 <HAL_UART_Receive_IT>
 	HAL_Delay(200);
  8000306:	20c8      	movs	r0, #200	; 0xc8
  8000308:	f000 ffe0 	bl	80012cc <HAL_Delay>
 	sendString("\n\rUart set as listener.", &huart2);
- 800030c:	493f      	ldr	r1, [pc, #252]	; (800040c <main+0x150>)
- 800030e:	4844      	ldr	r0, [pc, #272]	; (8000420 <main+0x164>)
+ 800030c:	4940      	ldr	r1, [pc, #256]	; (8000410 <main+0x154>)
+ 800030e:	4845      	ldr	r0, [pc, #276]	; (8000424 <main+0x168>)
  8000310:	f000 feac 	bl	800106c <sendString>
 
 	/* nrf24L01+ struct init*/
@@ -379,12 +379,12 @@ int main(void)
 	testStruct = nRF_Init(&hspi1, &htim1, CSN_GPIO_Port, CSN_Pin,
  8000314:	2310      	movs	r3, #16
  8000316:	9301      	str	r3, [sp, #4]
- 8000318:	4b42      	ldr	r3, [pc, #264]	; (8000424 <main+0x168>)
+ 8000318:	4b43      	ldr	r3, [pc, #268]	; (8000428 <main+0x16c>)
  800031a:	9300      	str	r3, [sp, #0]
  800031c:	2310      	movs	r3, #16
- 800031e:	4a42      	ldr	r2, [pc, #264]	; (8000428 <main+0x16c>)
- 8000320:	493c      	ldr	r1, [pc, #240]	; (8000414 <main+0x158>)
- 8000322:	4842      	ldr	r0, [pc, #264]	; (800042c <main+0x170>)
+ 800031e:	4a43      	ldr	r2, [pc, #268]	; (800042c <main+0x170>)
+ 8000320:	493d      	ldr	r1, [pc, #244]	; (8000418 <main+0x15c>)
+ 8000322:	4843      	ldr	r0, [pc, #268]	; (8000430 <main+0x174>)
  8000324:	f000 fb1a 	bl	800095c <nRF_Init>
  8000328:	6078      	str	r0, [r7, #4]
   /* Infinite loop */
@@ -393,172 +393,176 @@ int main(void)
   {
 		/* UART print RX buffer */
 		if (uartRx_flag) {
- 800032a:	4b41      	ldr	r3, [pc, #260]	; (8000430 <main+0x174>)
+ 800032a:	4b42      	ldr	r3, [pc, #264]	; (8000434 <main+0x178>)
  800032c:	781b      	ldrb	r3, [r3, #0]
  800032e:	b2db      	uxtb	r3, r3
  8000330:	2b00      	cmp	r3, #0
  8000332:	d0fa      	beq.n	800032a <main+0x6e>
+			/*
 			sendString("\r\nData received.", &huart2); //log
- 8000334:	4935      	ldr	r1, [pc, #212]	; (800040c <main+0x150>)
- 8000336:	483f      	ldr	r0, [pc, #252]	; (8000434 <main+0x178>)
- 8000338:	f000 fe98 	bl	800106c <sendString>
 			HAL_Delay(100);
- 800033c:	2064      	movs	r0, #100	; 0x64
- 800033e:	f000 ffc5 	bl	80012cc <HAL_Delay>
-
+			 */
 			/* copy characters to temporary buffer */
 			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);
- 8000342:	220e      	movs	r2, #14
- 8000344:	4935      	ldr	r1, [pc, #212]	; (800041c <main+0x160>)
- 8000346:	483c      	ldr	r0, [pc, #240]	; (8000438 <main+0x17c>)
- 8000348:	f003 fa88 	bl	800385c <memcpy>
+ 8000334:	220e      	movs	r2, #14
+ 8000336:	493a      	ldr	r1, [pc, #232]	; (8000420 <main+0x164>)
+ 8000338:	483f      	ldr	r0, [pc, #252]	; (8000438 <main+0x17c>)
+ 800033a:	f003 fa8f 	bl	800385c <memcpy>
 
 			/* Main condition - data size */
 			if (strlen(uartTmpBuffer) >= MINIMUM_COMMAND_SIZE) {
- 800034c:	483a      	ldr	r0, [pc, #232]	; (8000438 <main+0x17c>)
- 800034e:	f7ff fefd 	bl	800014c <strlen>
- 8000352:	4603      	mov	r3, r0
- 8000354:	2b08      	cmp	r3, #8
- 8000356:	d944      	bls.n	80003e2 <main+0x126>
+ 800033e:	483e      	ldr	r0, [pc, #248]	; (8000438 <main+0x17c>)
+ 8000340:	f7ff ff04 	bl	800014c <strlen>
+ 8000344:	4603      	mov	r3, r0
+ 8000346:	2b08      	cmp	r3, #8
+ 8000348:	d94d      	bls.n	80003e6 <main+0x12a>
 
 				/* detect entrance to nRF and set prompt flag */
 				if (uartPromptFlag == 0) {
- 8000358:	4b38      	ldr	r3, [pc, #224]	; (800043c <main+0x180>)
- 800035a:	781b      	ldrb	r3, [r3, #0]
- 800035c:	b2db      	uxtb	r3, r3
- 800035e:	2b00      	cmp	r3, #0
- 8000360:	d111      	bne.n	8000386 <main+0xca>
+ 800034a:	4b3c      	ldr	r3, [pc, #240]	; (800043c <main+0x180>)
+ 800034c:	781b      	ldrb	r3, [r3, #0]
+ 800034e:	b2db      	uxtb	r3, r3
+ 8000350:	2b00      	cmp	r3, #0
+ 8000352:	d114      	bne.n	800037e <main+0xc2>
 					if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
- 8000362:	4937      	ldr	r1, [pc, #220]	; (8000440 <main+0x184>)
- 8000364:	4834      	ldr	r0, [pc, #208]	; (8000438 <main+0x17c>)
- 8000366:	f003 faa1 	bl	80038ac <strstr>
- 800036a:	4603      	mov	r3, r0
- 800036c:	2b00      	cmp	r3, #0
- 800036e:	d00a      	beq.n	8000386 <main+0xca>
+ 8000354:	493a      	ldr	r1, [pc, #232]	; (8000440 <main+0x184>)
+ 8000356:	4838      	ldr	r0, [pc, #224]	; (8000438 <main+0x17c>)
+ 8000358:	f003 faa8 	bl	80038ac <strstr>
+ 800035c:	4603      	mov	r3, r0
+ 800035e:	2b00      	cmp	r3, #0
+ 8000360:	d00d      	beq.n	800037e <main+0xc2>
 						uartPromptFlag = 1;
- 8000370:	4b32      	ldr	r3, [pc, #200]	; (800043c <main+0x180>)
- 8000372:	2201      	movs	r2, #1
- 8000374:	701a      	strb	r2, [r3, #0]
+ 8000362:	4b36      	ldr	r3, [pc, #216]	; (800043c <main+0x180>)
+ 8000364:	2201      	movs	r2, #1
+ 8000366:	701a      	strb	r2, [r3, #0]
 						sendString(nrfPrompt, &huart2);
- 8000376:	4925      	ldr	r1, [pc, #148]	; (800040c <main+0x150>)
- 8000378:	4832      	ldr	r0, [pc, #200]	; (8000444 <main+0x188>)
+ 8000368:	4929      	ldr	r1, [pc, #164]	; (8000410 <main+0x154>)
+ 800036a:	4836      	ldr	r0, [pc, #216]	; (8000444 <main+0x188>)
+ 800036c:	f000 fe7e 	bl	800106c <sendString>
+						HAL_Delay(10);
+ 8000370:	200a      	movs	r0, #10
+ 8000372:	f000 ffab 	bl	80012cc <HAL_Delay>
+						sendString("\n\rnRF24L01 access available\n", &huart2);
+ 8000376:	4926      	ldr	r1, [pc, #152]	; (8000410 <main+0x154>)
+ 8000378:	4833      	ldr	r0, [pc, #204]	; (8000448 <main+0x18c>)
  800037a:	f000 fe77 	bl	800106c <sendString>
-						sendString("nRF24L01 access available\n", &huart2);
- 800037e:	4923      	ldr	r1, [pc, #140]	; (800040c <main+0x150>)
- 8000380:	4831      	ldr	r0, [pc, #196]	; (8000448 <main+0x18c>)
- 8000382:	f000 fe73 	bl	800106c <sendString>
 					}
 				}
 
 				/* If nrf mode available check and execute command */
 				if (uartPromptFlag == 1) {
- 8000386:	4b2d      	ldr	r3, [pc, #180]	; (800043c <main+0x180>)
- 8000388:	781b      	ldrb	r3, [r3, #0]
- 800038a:	b2db      	uxtb	r3, r3
- 800038c:	2b01      	cmp	r3, #1
- 800038e:	d12c      	bne.n	80003ea <main+0x12e>
+ 800037e:	4b2f      	ldr	r3, [pc, #188]	; (800043c <main+0x180>)
+ 8000380:	781b      	ldrb	r3, [r3, #0]
+ 8000382:	b2db      	uxtb	r3, r3
+ 8000384:	2b01      	cmp	r3, #1
+ 8000386:	d132      	bne.n	80003ee <main+0x132>
 					/* Check command as exit command */
 					if (strstr(uartTmpBuffer, nrfExit) != NULL) {
- 8000390:	492e      	ldr	r1, [pc, #184]	; (800044c <main+0x190>)
- 8000392:	4829      	ldr	r0, [pc, #164]	; (8000438 <main+0x17c>)
- 8000394:	f003 fa8a 	bl	80038ac <strstr>
- 8000398:	4603      	mov	r3, r0
- 800039a:	2b00      	cmp	r3, #0
- 800039c:	d00b      	beq.n	80003b6 <main+0xfa>
+ 8000388:	4930      	ldr	r1, [pc, #192]	; (800044c <main+0x190>)
+ 800038a:	482b      	ldr	r0, [pc, #172]	; (8000438 <main+0x17c>)
+ 800038c:	f003 fa8e 	bl	80038ac <strstr>
+ 8000390:	4603      	mov	r3, r0
+ 8000392:	2b00      	cmp	r3, #0
+ 8000394:	d00e      	beq.n	80003b4 <main+0xf8>
 						sendString(nrfPrompt, &huart2);
- 800039e:	491b      	ldr	r1, [pc, #108]	; (800040c <main+0x150>)
- 80003a0:	4828      	ldr	r0, [pc, #160]	; (8000444 <main+0x188>)
- 80003a2:	f000 fe63 	bl	800106c <sendString>
+ 8000396:	491e      	ldr	r1, [pc, #120]	; (8000410 <main+0x154>)
+ 8000398:	482a      	ldr	r0, [pc, #168]	; (8000444 <main+0x188>)
+ 800039a:	f000 fe67 	bl	800106c <sendString>
+						HAL_Delay(10);
+ 800039e:	200a      	movs	r0, #10
+ 80003a0:	f000 ff94 	bl	80012cc <HAL_Delay>
 						sendString("nRF24L01 access not available\n", &huart2);
- 80003a6:	4919      	ldr	r1, [pc, #100]	; (800040c <main+0x150>)
- 80003a8:	4829      	ldr	r0, [pc, #164]	; (8000450 <main+0x194>)
- 80003aa:	f000 fe5f 	bl	800106c <sendString>
+ 80003a4:	491a      	ldr	r1, [pc, #104]	; (8000410 <main+0x154>)
+ 80003a6:	482a      	ldr	r0, [pc, #168]	; (8000450 <main+0x194>)
+ 80003a8:	f000 fe60 	bl	800106c <sendString>
 						uartPromptFlag = 0;
- 80003ae:	4b23      	ldr	r3, [pc, #140]	; (800043c <main+0x180>)
- 80003b0:	2200      	movs	r2, #0
- 80003b2:	701a      	strb	r2, [r3, #0]
- 80003b4:	e019      	b.n	80003ea <main+0x12e>
+ 80003ac:	4b23      	ldr	r3, [pc, #140]	; (800043c <main+0x180>)
+ 80003ae:	2200      	movs	r2, #0
+ 80003b0:	701a      	strb	r2, [r3, #0]
+ 80003b2:	e01c      	b.n	80003ee <main+0x132>
 					}
 					/* If not exit command - check as others commands */
 					else {
 						/* Detect command */
 						uint8_t detectCommandNumber = detectCommand(
- 80003b6:	4820      	ldr	r0, [pc, #128]	; (8000438 <main+0x17c>)
- 80003b8:	f7ff fec8 	bl	800014c <strlen>
- 80003bc:	4603      	mov	r3, r0
- 80003be:	461a      	mov	r2, r3
- 80003c0:	4924      	ldr	r1, [pc, #144]	; (8000454 <main+0x198>)
- 80003c2:	481d      	ldr	r0, [pc, #116]	; (8000438 <main+0x17c>)
- 80003c4:	f000 fd38 	bl	8000e38 <detectCommand>
- 80003c8:	4603      	mov	r3, r0
- 80003ca:	70fb      	strb	r3, [r7, #3]
+ 80003b4:	4820      	ldr	r0, [pc, #128]	; (8000438 <main+0x17c>)
+ 80003b6:	f7ff fec9 	bl	800014c <strlen>
+ 80003ba:	4603      	mov	r3, r0
+ 80003bc:	461a      	mov	r2, r3
+ 80003be:	4925      	ldr	r1, [pc, #148]	; (8000454 <main+0x198>)
+ 80003c0:	481d      	ldr	r0, [pc, #116]	; (8000438 <main+0x17c>)
+ 80003c2:	f000 fd39 	bl	8000e38 <detectCommand>
+ 80003c6:	4603      	mov	r3, r0
+ 80003c8:	70fb      	strb	r3, [r7, #3]
 								uartTmpBuffer, nrfCommandTable,
 								strlen(uartTmpBuffer));
 						/* Execute command */
 						sendString(nrfPrompt, &huart2); //print prompt
- 80003cc:	490f      	ldr	r1, [pc, #60]	; (800040c <main+0x150>)
- 80003ce:	481d      	ldr	r0, [pc, #116]	; (8000444 <main+0x188>)
- 80003d0:	f000 fe4c 	bl	800106c <sendString>
+ 80003ca:	4911      	ldr	r1, [pc, #68]	; (8000410 <main+0x154>)
+ 80003cc:	481d      	ldr	r0, [pc, #116]	; (8000444 <main+0x188>)
+ 80003ce:	f000 fe4d 	bl	800106c <sendString>
+						HAL_Delay(10);
+ 80003d2:	200a      	movs	r0, #10
+ 80003d4:	f000 ff7a 	bl	80012cc <HAL_Delay>
 						executeCommand(testStruct, detectCommandNumber,
- 80003d4:	78fb      	ldrb	r3, [r7, #3]
- 80003d6:	4a18      	ldr	r2, [pc, #96]	; (8000438 <main+0x17c>)
- 80003d8:	4619      	mov	r1, r3
- 80003da:	6878      	ldr	r0, [r7, #4]
- 80003dc:	f000 fd5a 	bl	8000e94 <executeCommand>
- 80003e0:	e003      	b.n	80003ea <main+0x12e>
+ 80003d8:	78fb      	ldrb	r3, [r7, #3]
+ 80003da:	4a17      	ldr	r2, [pc, #92]	; (8000438 <main+0x17c>)
+ 80003dc:	4619      	mov	r1, r3
+ 80003de:	6878      	ldr	r0, [r7, #4]
+ 80003e0:	f000 fd58 	bl	8000e94 <executeCommand>
+ 80003e4:	e003      	b.n	80003ee <main+0x132>
 								uartTmpBuffer);
 					}
 				}
 				/* End of positive part of condtion */
 			} else {
 				sendString("\r\n#nRF command invalid.", &huart2);	//log
- 80003e2:	490a      	ldr	r1, [pc, #40]	; (800040c <main+0x150>)
- 80003e4:	481c      	ldr	r0, [pc, #112]	; (8000458 <main+0x19c>)
- 80003e6:	f000 fe41 	bl	800106c <sendString>
+ 80003e6:	490a      	ldr	r1, [pc, #40]	; (8000410 <main+0x154>)
+ 80003e8:	481b      	ldr	r0, [pc, #108]	; (8000458 <main+0x19c>)
+ 80003ea:	f000 fe3f 	bl	800106c <sendString>
 			}
 
 			/* Reset buffers and start UART listening */
 			resetChar(uartReceiveBuffer, sizeof(uartReceiveBuffer));
- 80003ea:	2120      	movs	r1, #32
- 80003ec:	480b      	ldr	r0, [pc, #44]	; (800041c <main+0x160>)
- 80003ee:	f000 fe50 	bl	8001092 <resetChar>
+ 80003ee:	2120      	movs	r1, #32
+ 80003f0:	480b      	ldr	r0, [pc, #44]	; (8000420 <main+0x164>)
+ 80003f2:	f000 fe4e 	bl	8001092 <resetChar>
 			HAL_UART_Receive_IT(&huart2, (uint8_t*) uartReceiveBuffer,
- 80003f2:	220e      	movs	r2, #14
- 80003f4:	4909      	ldr	r1, [pc, #36]	; (800041c <main+0x160>)
- 80003f6:	4805      	ldr	r0, [pc, #20]	; (800040c <main+0x150>)
- 80003f8:	f002 feab 	bl	8003152 <HAL_UART_Receive_IT>
+ 80003f6:	220e      	movs	r2, #14
+ 80003f8:	4909      	ldr	r1, [pc, #36]	; (8000420 <main+0x164>)
+ 80003fa:	4805      	ldr	r0, [pc, #20]	; (8000410 <main+0x154>)
+ 80003fc:	f002 fea9 	bl	8003152 <HAL_UART_Receive_IT>
 			UART_READ_SIZE);
 			resetChar(uartTmpBuffer, sizeof(uartTmpBuffer));
- 80003fc:	2120      	movs	r1, #32
- 80003fe:	480e      	ldr	r0, [pc, #56]	; (8000438 <main+0x17c>)
- 8000400:	f000 fe47 	bl	8001092 <resetChar>
+ 8000400:	2120      	movs	r1, #32
+ 8000402:	480d      	ldr	r0, [pc, #52]	; (8000438 <main+0x17c>)
+ 8000404:	f000 fe45 	bl	8001092 <resetChar>
 			/* Reset flag */
 			uartRx_flag = 0;
- 8000404:	4b0a      	ldr	r3, [pc, #40]	; (8000430 <main+0x174>)
- 8000406:	2200      	movs	r2, #0
- 8000408:	701a      	strb	r2, [r3, #0]
+ 8000408:	4b0a      	ldr	r3, [pc, #40]	; (8000434 <main+0x178>)
+ 800040a:	2200      	movs	r2, #0
+ 800040c:	701a      	strb	r2, [r3, #0]
 		if (uartRx_flag) {
- 800040a:	e78e      	b.n	800032a <main+0x6e>
- 800040c:	20000360 	.word	0x20000360
- 8000410:	08003a60 	.word	0x08003a60
- 8000414:	20000320 	.word	0x20000320
- 8000418:	08003a7c 	.word	0x08003a7c
- 800041c:	200002a8 	.word	0x200002a8
- 8000420:	08003a94 	.word	0x08003a94
- 8000424:	40011000 	.word	0x40011000
- 8000428:	40010800 	.word	0x40010800
- 800042c:	200002c8 	.word	0x200002c8
- 8000430:	20000225 	.word	0x20000225
- 8000434:	08003aac 	.word	0x08003aac
+ 800040e:	e78c      	b.n	800032a <main+0x6e>
+ 8000410:	20000360 	.word	0x20000360
+ 8000414:	08003a60 	.word	0x08003a60
+ 8000418:	20000320 	.word	0x20000320
+ 800041c:	08003a7c 	.word	0x08003a7c
+ 8000420:	200002a8 	.word	0x200002a8
+ 8000424:	08003a94 	.word	0x08003a94
+ 8000428:	40011000 	.word	0x40011000
+ 800042c:	40010800 	.word	0x40010800
+ 8000430:	200002c8 	.word	0x200002c8
+ 8000434:	20000225 	.word	0x20000225
  8000438:	20000268 	.word	0x20000268
  800043c:	20000224 	.word	0x20000224
- 8000440:	08003cfc 	.word	0x08003cfc
- 8000444:	08003d14 	.word	0x08003d14
- 8000448:	08003ac0 	.word	0x08003ac0
- 800044c:	08003d08 	.word	0x08003d08
- 8000450:	08003adc 	.word	0x08003adc
+ 8000440:	08003cec 	.word	0x08003cec
+ 8000444:	08003d04 	.word	0x08003d04
+ 8000448:	08003aac 	.word	0x08003aac
+ 800044c:	08003cf8 	.word	0x08003cf8
+ 8000450:	08003acc 	.word	0x08003acc
  8000454:	20000008 	.word	0x20000008
- 8000458:	08003afc 	.word	0x08003afc
+ 8000458:	08003aec 	.word	0x08003aec
 
 0800045c <SystemClock_Config>:
 /**
@@ -2322,9 +2326,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
  8000e34:	40021000 	.word	0x40021000
 
 08000e38 <detectCommand>:
-const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
-		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
-		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
+	char uartTxBuffer[UART_BUFFER_SIZE_TX];
+
+} nRF_UartStruct_t;
 
 /* Functions's bodies */
 int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
@@ -2575,17 +2579,17 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
  8000fc4:	bd80      	pop	{r7, pc}
  8000fc6:	bf00      	nop
  8000fc8:	20000360 	.word	0x20000360
- 8000fcc:	08003b14 	.word	0x08003b14
- 8000fd0:	08003b2c 	.word	0x08003b2c
- 8000fd4:	08003b44 	.word	0x08003b44
- 8000fd8:	08003b5c 	.word	0x08003b5c
- 8000fdc:	08003b74 	.word	0x08003b74
- 8000fe0:	08003b8c 	.word	0x08003b8c
- 8000fe4:	08003ba4 	.word	0x08003ba4
- 8000fe8:	08003bbc 	.word	0x08003bbc
- 8000fec:	08003bd4 	.word	0x08003bd4
- 8000ff0:	08003bec 	.word	0x08003bec
- 8000ff4:	08003c10 	.word	0x08003c10
+ 8000fcc:	08003b04 	.word	0x08003b04
+ 8000fd0:	08003b1c 	.word	0x08003b1c
+ 8000fd4:	08003b34 	.word	0x08003b34
+ 8000fd8:	08003b4c 	.word	0x08003b4c
+ 8000fdc:	08003b64 	.word	0x08003b64
+ 8000fe0:	08003b7c 	.word	0x08003b7c
+ 8000fe4:	08003b94 	.word	0x08003b94
+ 8000fe8:	08003bac 	.word	0x08003bac
+ 8000fec:	08003bc4 	.word	0x08003bc4
+ 8000ff0:	08003bdc 	.word	0x08003bdc
+ 8000ff4:	08003c00 	.word	0x08003c00
 
 08000ff8 <channelDetect>:
 
@@ -2959,7 +2963,7 @@ LoopFillZerobss:
   bx lr
  80011ee:	4770      	bx	lr
   ldr r3, =_sidata
- 80011f0:	08003e30 	.word	0x08003e30
+ 80011f0:	08003e20 	.word	0x08003e20
   ldr r0, =_sdata
  80011f4:	20000000 	.word	0x20000000
   ldr r3, =_edata
@@ -5514,7 +5518,7 @@ if (((RCC_ClkInitStruct->ClockType) & RCC_CLOCKTYPE_PCLK1) == RCC_CLOCKTYPE_PCLK
  8001ffe:	bf00      	nop
  8002000:	40022000 	.word	0x40022000
  8002004:	40021000 	.word	0x40021000
- 8002008:	08003c5c 	.word	0x08003c5c
+ 8002008:	08003c4c 	.word	0x08003c4c
  800200c:	20000004 	.word	0x20000004
  8002010:	20000030 	.word	0x20000030
 
@@ -5663,8 +5667,8 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  80020be:	bc90      	pop	{r4, r7}
  80020c0:	4770      	bx	lr
  80020c2:	bf00      	nop
- 80020c4:	08003c48 	.word	0x08003c48
- 80020c8:	08003c58 	.word	0x08003c58
+ 80020c4:	08003c38 	.word	0x08003c38
+ 80020c8:	08003c48 	.word	0x08003c48
  80020cc:	40021000 	.word	0x40021000
  80020d0:	007a1200 	.word	0x007a1200
  80020d4:	003d0900 	.word	0x003d0900
@@ -5712,7 +5716,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8002108:	4618      	mov	r0, r3
  800210a:	bd80      	pop	{r7, pc}
  800210c:	40021000 	.word	0x40021000
- 8002110:	08003c6c 	.word	0x08003c6c
+ 8002110:	08003c5c 	.word	0x08003c5c
 
 08002114 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -5738,7 +5742,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  8002130:	4618      	mov	r0, r3
  8002132:	bd80      	pop	{r7, pc}
  8002134:	40021000 	.word	0x40021000
- 8002138:	08003c6c 	.word	0x08003c6c
+ 8002138:	08003c5c 	.word	0x08003c5c
 
 0800213c <RCC_Delay>:
   * @brief  This function provides delay (in milliseconds) based on CPU cycles method.
@@ -9866,10 +9870,10 @@ static void UART_SetConfig(UART_HandleTypeDef *huart)
  8003846:	4798      	blx	r3
  8003848:	3501      	adds	r5, #1
  800384a:	e7f2      	b.n	8003832 <__libc_init_array+0x1e>
- 800384c:	08003e28 	.word	0x08003e28
- 8003850:	08003e28 	.word	0x08003e28
- 8003854:	08003e28 	.word	0x08003e28
- 8003858:	08003e2c 	.word	0x08003e2c
+ 800384c:	08003e18 	.word	0x08003e18
+ 8003850:	08003e18 	.word	0x08003e18
+ 8003854:	08003e18 	.word	0x08003e18
+ 8003858:	08003e1c 	.word	0x08003e1c
 
 0800385c <memcpy>:
  800385c:	b510      	push	{r4, lr}

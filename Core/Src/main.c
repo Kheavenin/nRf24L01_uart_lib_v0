@@ -39,8 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define UART_BUFFER_SIZE_TX 32
-#define UART_BUFFER_SIZE_RX 32
+
 
 #define UART_READ_SIZE 14
 /* USER CODE END PD */
@@ -136,9 +135,10 @@ int main(void)
   {
 		/* UART print RX buffer */
 		if (uartRx_flag) {
+			/*
 			sendString("\r\nData received.", &huart2); //log
 			HAL_Delay(100);
-
+			 */
 			/* copy characters to temporary buffer */
 			memcpy(uartTmpBuffer, uartReceiveBuffer, UART_READ_SIZE);
 
@@ -150,7 +150,8 @@ int main(void)
 					if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
 						uartPromptFlag = 1;
 						sendString(nrfPrompt, &huart2);
-						sendString("nRF24L01 access available\n", &huart2);
+						HAL_Delay(10);
+						sendString("\n\rnRF24L01 access available\n", &huart2);
 					}
 				}
 
@@ -159,6 +160,7 @@ int main(void)
 					/* Check command as exit command */
 					if (strstr(uartTmpBuffer, nrfExit) != NULL) {
 						sendString(nrfPrompt, &huart2);
+						HAL_Delay(10);
 						sendString("nRF24L01 access not available\n", &huart2);
 						uartPromptFlag = 0;
 					}
@@ -170,6 +172,7 @@ int main(void)
 								strlen(uartTmpBuffer));
 						/* Execute command */
 						sendString(nrfPrompt, &huart2); //print prompt
+						HAL_Delay(10);
 						executeCommand(testStruct, detectCommandNumber,
 								uartTmpBuffer);
 					}

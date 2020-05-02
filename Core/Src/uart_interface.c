@@ -28,11 +28,20 @@ const char nrfChannel[] = { "#nrf-ch-" };//size 9 with \0 + 3 signs of channel
 
 const char nrfEnter[] = { "#nrf-enter" };		//size 11 with \0
 const char nrfExit[] = { "#nrf-exit" };			//size 10 with \0
-const char nrfPrompt[] = { "#nrf> " };
+const char nrfPrompt[] = { "\n\r#nrf> " };
 
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
+
+typedef struct {
+	uint8_t uartIrqFlag;
+	uint8_t uartPromptFlag;
+
+	char uartTxBuffer[UART_BUFFER_SIZE_TX];
+	char uartRXBuffer[UART_BUFFER_SIZE_RX];
+
+} nRF_UartStruct_t;
 
 /* Functions's bodies */
 int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {
