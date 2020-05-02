@@ -55,10 +55,10 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 }
 
 /* Functions's bodies */
-int8_t detectCommand(const char *str, size_t strLen) {
-	if (strLen < MINIMUM_COMMAND_SIZE) //Check min size of command
+int8_t detectCommand(const char *str) {
+	if (strlen(str) < MINIMUM_COMMAND_SIZE) //Check min size of command
 		return -1;
-	/* First command */
+	/* Check command */
 	uint8_t i;
 	for (i = 0; i < COMMAND_TABLE_SIZE; i++) {
 		if (strstr(str, nrfCommandTable[i]) != NULL) {
@@ -121,7 +121,7 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 		break;
 	case 9:
 		sendString("\n\rExecuted change of RF channel.", &huart2); //log
-		int8_t channel = channelDetect(str, strlen(str));
+		int8_t channel = channelDetect(str);
 		if (channel != -1) {
 			//change channel command
 			return 1;
@@ -140,14 +140,14 @@ uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 	return 0;
 }
 
-int8_t channelDetect(const char *str, size_t strLen) {
-	if (strLen < 9) {
+int8_t channelDetect(const char *str) {
+	if (strlen(str) < 9) {
 		return -1;
 	}
 
-	char chNum[4];
 	/* Find position of command in string */
 	/* strlen(nrfCommandTable[9])is offset of command  "#nrf-ch-" ,  necessary to find number of channel */
+	char chNum[4];
 	strncpy(chNum,
 			(strstr(str, nrfCommandTable[9]) + strlen(nrfCommandTable[9])), 3);
 	int8_t channel = atoi(chNum);	//conversion string channel number to u_int
