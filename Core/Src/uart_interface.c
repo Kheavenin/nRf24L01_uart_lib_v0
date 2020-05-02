@@ -34,14 +34,7 @@ const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
-typedef struct {
-	uint8_t uartIrqFlag;
-	uint8_t uartPromptFlag;
 
-	char uartTxBuffer[UART_BUFFER_SIZE_TX];
-	char uartRXBuffer[UART_BUFFER_SIZE_RX];
-
-} nRF_UartStruct_t;
 
 /* Functions's bodies */
 int8_t detectCommand(const char *str, const char **cmdTab, size_t strLen) {

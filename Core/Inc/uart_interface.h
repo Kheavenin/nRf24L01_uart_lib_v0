@@ -25,6 +25,7 @@
 
 #define UART_BUFFER_SIZE_TX 32
 #define UART_BUFFER_SIZE_RX 32
+#define UART_BUFFER_SIZE_TMP 32
 
 #define MINIMUM_COMMAND_SIZE 9 //8
 #define COMMAND_TABLE_SIZE 10
@@ -51,6 +52,20 @@ extern const char *nrfCommandTable[COMMAND_TABLE_SIZE];
 extern const char nrfEnter[];
 extern const char nrfExit[];
 extern const char nrfPrompt[];
+
+typedef struct {
+	nrfStruct_t *nrfStruct;
+	UART_HandleTypeDef *huart;
+
+	uint8_t uartIrqFlag;
+	uint8_t uartPromptFlag;
+
+	char uartTxBuffer[UART_BUFFER_SIZE_TX];
+	char uartRXBuffer[UART_BUFFER_SIZE_RX];
+	char uartTemporaryBuffer[UART_BUFFER_SIZE_TMP];
+
+} nRF_UartStruct_t;
+
 
 /* Functions's prototypes */
 uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
