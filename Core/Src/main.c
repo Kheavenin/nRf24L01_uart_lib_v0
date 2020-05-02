@@ -160,6 +160,7 @@ int main(void)
 					if (strstr(uartTmpBuffer, nrfExit) != NULL) {
 						sendString(nrfPrompt, &huart2);
 						sendString("nRF24L01 access not available\n", &huart2);
+						uartPromptFlag = 0;
 					}
 					/* If not exit command - check as others commands */
 					else {
@@ -168,6 +169,7 @@ int main(void)
 								uartTmpBuffer, nrfCommandTable,
 								strlen(uartTmpBuffer));
 						/* Execute command */
+						sendString(nrfPrompt, &huart2); //print prompt
 						executeCommand(testStruct, detectCommandNumber,
 								uartTmpBuffer);
 					}
