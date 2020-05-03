@@ -76,8 +76,8 @@ uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct);
 /* Functions's prototypes */
 int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
 		const char *str);
-int8_t detectCommand(const char *str);
-int8_t channelDetect(const char *str);
+int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str);
+int8_t channelDetect(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 

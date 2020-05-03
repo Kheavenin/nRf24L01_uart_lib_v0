@@ -144,7 +144,7 @@ int main(void)
 
 			/* Main condition - data size */
 			if (strlen(uartTmpBuffer) >= MINIMUM_COMMAND_SIZE) {
-
+#if 0
 				/* detect entrance to nRF and set prompt flag */
 				if (uartPromptFlag == 0) {
 					if (strstr(uartTmpBuffer, nrfEnter) != NULL) {
@@ -176,6 +176,7 @@ int main(void)
 								uartTmpBuffer);
 					}
 				}
+#endif
 				/* End of positive part of condtion */
 			} else {
 				sendString("\r\n#nRF command invalid.", &huart2);	//log

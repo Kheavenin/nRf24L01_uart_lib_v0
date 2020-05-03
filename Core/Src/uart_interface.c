@@ -86,15 +86,17 @@ uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct) {
 
 /* Detect and execute commands (others than Exit and Enter) */
 uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct) {
-	int8_t commandNumber = detectCommand(nRF_UartStruct->uartTemporaryBuffer);
+	int8_t commandNumber = detectCommand(nRF_UartStruct,
+			nRF_UartStruct->uartTemporaryBuffer);
 	if (commandNumber > 0) {
-		executeCommand(nRF_UartStruct->nrfStruct, commandNumber, str);
+		executeCommand(nRF_UartStruct->nrfStruct, commandNumber,
+				nRF_UartStruct->uartTemporaryBuffer);
 	}
 }
 
 
 /* Functions's bodies */
-int8_t detectCommand(const char *str) {
+int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	if (strlen(str) < MINIMUM_COMMAND_SIZE) //Check min size of command
 		return -1;
 	/* Check command */
@@ -104,7 +106,7 @@ int8_t detectCommand(const char *str) {
 			/* If it's change channel command read channel number */
 			if (i == 8) {
 				/* Wrong channel's number */
-				if (channelDetect(str) == -1)
+				if (channelDetect(nRF_UartStruct, str) == -1)
 					return -1;
 			}
 			return i;
@@ -113,11 +115,10 @@ int8_t detectCommand(const char *str) {
 	return -1;
 }
 
-int8_t channelDetect(const char *str) {
+int8_t channelDetect(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	if (strlen(str) < 9) {
 		return -1;
 	}
-
 	/* Find position of command in string */
 	char chNum[4];
 	/* strlen(nrfCommandTable[9])is offset of command  "#nrf-ch-" ,  necessary to find number of channel */
@@ -129,13 +130,15 @@ int8_t channelDetect(const char *str) {
 	if (channel > 125 || channel < 0) {
 		return -1;
 	}
+	/* Write channel number to structure */
+	nRF_UartStruct->uartNrfChannel = channel;
 
 	return channel;
 }
 
 int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
 		const char *str) {
-	switch (commandNumber) {
+	switch (cmdNum) {
 	case 0:
 		/* Execute Power Up */
 //		pwrUp(nrfStruct);
