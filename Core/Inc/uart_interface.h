@@ -70,8 +70,10 @@ typedef struct {
 nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 		UART_HandleTypeDef *huart);
 
+uint8_t nrfMode(nRF_UartStruct_t *nRF_UartStruct);
+
 /* Functions's prototypes */
-uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
+int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 		const char *str);
 int8_t detectCommand(const char *str);
 int8_t channelDetect(const char *str);

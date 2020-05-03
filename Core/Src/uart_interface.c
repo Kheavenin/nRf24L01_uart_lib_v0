@@ -34,6 +34,33 @@ const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
+uint8_t nrfModeEnter(nRF_UartStruct_t *nRF_UartStruct) {
+	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfEnter) != NULL) {
+		nRF_UartStruct->uartPromptFlag = 1;
+		/*
+		sendString(nrfPrompt, &huart2);
+		HAL_Delay(10);
+		sendString("\n\rnRF24L01 access available\n", &huart2);
+		 */
+		return 1;
+	}
+	return 0;
+}
+
+uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct) {
+	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfExit) != NULL) {
+		nRF_UartStruct->uartPromptFlag = 0;
+		/*
+		sendString(nrfPrompt, &huart2);
+		HAL_Delay(10);
+		sendString("nRF24L01 access not available\n", &huart2);
+		 */
+		return 1;
+	}
+	return 0;
+}
+
+/* Create struct */
 nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 		UART_HandleTypeDef *huart) {
 
@@ -68,7 +95,7 @@ int8_t detectCommand(const char *str) {
 	return -1;
 }
 
-uint8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
+int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 		const char *str) {
 	switch (commandNumber) {
 	case 0:
