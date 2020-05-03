@@ -53,6 +53,8 @@
 /* Const */
 
 /* Variables */
+volatile uint8_t *uartGlobalFlagIT = NULL;
+
 volatile uint8_t uartPromptFlag = 0;
 volatile uint8_t uartRx_flag = 0;
 
@@ -119,6 +121,7 @@ int main(void) {
 	/* nrt Uart interface struct init */
 	nRF_UartStruct_t *testUartStruct;
 	testUartStruct = nRF_UartInit(testNrfStruct, &huart2);
+	uartGlobalFlagIT = &(testUartStruct->uartIrqFlag);
 
 	HAL_UART_Receive_IT(&huart2, (uint8_t*) (testUartStruct->uartRxBuffer), UART_READ_SIZE);
 	HAL_Delay(200);
@@ -129,7 +132,7 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		/* Begin UART receive interrupt  */
-		if (uartRx_flag) {
+		if (*uartGlobalFlagIT) {
 			/* copy characters to temporary buffer */
 			memcpy(testUartStruct->uartTemporaryBuffer, testUartStruct->uartRxBuffer, UART_READ_SIZE);
 
@@ -137,12 +140,12 @@ int main(void) {
 			if (strlen(testUartStruct->uartTemporaryBuffer) >= MINIMUM_COMMAND_SIZE) {
 
 				/* detect entrance to nRF and set prompt flag */
-				if (uartPromptFlag == 0) {
+				if ((testUartStruct->uartPromptFlag) == 0) {
 					nrfModeEnter(testUartStruct);
 				}
 
 				/* If nrf mode available check and execute command */
-				if (uartPromptFlag == 1) {
+				if ((testUartStruct->uartPromptFlag) == 1) {
 					/* Check command as exit command */
 					if (!nrfModeExit(testUartStruct)) {
 						/* If not exit command - check as others commands */
@@ -158,7 +161,7 @@ int main(void) {
 			/* Reset buffers */
 			resetChar(testUartStruct->uartRxBuffer, UART_BUFFER_SIZE_RX);
 			resetChar(testUartStruct->uartTemporaryBuffer, UART_BUFFER_SIZE_TMP);
-			uartRx_flag = 0; /* Reset flag */
+			*uartGlobalFlagIT = 0; /* Reset flag */
 			/* Start UART listening */
 			HAL_UART_Receive_IT(&huart2, (uint8_t*) (testUartStruct->uartRxBuffer), UART_READ_SIZE);
 		}
@@ -206,7 +209,7 @@ void SystemClock_Config(void) {
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	uartRx_flag = 1;
+	*uartGlobalFlagIT = 1;
 }
 /* USER CODE END 4 */
 

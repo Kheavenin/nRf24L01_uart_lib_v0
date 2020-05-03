@@ -59,8 +59,8 @@ typedef struct {
 	nrfStruct_t *nrfStruct;
 	UART_HandleTypeDef *nrfUartStruct;
 
-	uint8_t uartIrqFlag;
-	uint8_t uartPromptFlag;
+	volatile uint8_t uartIrqFlag;
+	volatile uint8_t uartPromptFlag;
 	uint8_t uartNrfChannel;
 	char uartTxBuffer[UART_BUFFER_SIZE_TX];
 	char uartRxBuffer[UART_BUFFER_SIZE_RX];

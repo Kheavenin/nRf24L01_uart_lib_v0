@@ -92,7 +92,6 @@ uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct) {
 	/* Execute command */
 	if (commandNumber > 0) {
 		executeCommand(nRF_UartStruct, commandNumber);
-
 		return 1;
 	}
 	return -1;
