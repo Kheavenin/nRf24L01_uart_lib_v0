@@ -23,15 +23,17 @@
 
 /* Define */
 
-#define UART_BUFFER_SIZE_TX 32
-#define UART_BUFFER_SIZE_RX 32
-#define UART_BUFFER_SIZE_TMP 32
+#define UART_BUFFER_SIZE_TX 24
+#define UART_BUFFER_SIZE_RX 24
+#define UART_BUFFER_SIZE_TMP 24
+
+#define UART_READ_SIZE 14
 
 #define MINIMUM_COMMAND_SIZE 9 //8
 #define COMMAND_TABLE_SIZE 10
 
 /* Extern */
-extern UART_HandleTypeDef huart2;
+//extern UART_HandleTypeDef huart2;
 
 /* Const */
 extern const char nrfPowerUp[];
@@ -72,10 +74,10 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 
 uint8_t nrfModeEnter(nRF_UartStruct_t *nRF_UartStruct);
 uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct);
+uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct);
 
 /* Functions's prototypes */
-int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
-		const char *str);
+int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum);
 int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 

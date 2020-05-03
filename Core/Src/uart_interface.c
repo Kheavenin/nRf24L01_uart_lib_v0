@@ -91,8 +91,7 @@ uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct) {
 			nRF_UartStruct->uartTemporaryBuffer);
 	/* Execute command */
 	if (commandNumber > 0) {
-		executeCommand(nRF_UartStruct->nrfStruct, commandNumber,
-				nRF_UartStruct->uartTemporaryBuffer);
+		executeCommand(nRF_UartStruct, commandNumber);
 
 		return 1;
 	}
@@ -141,64 +140,63 @@ int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	return channel;
 }
 
-int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
-		const char *str) {
+int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
 	switch (cmdNum) {
 	case 0:
 		/* Execute Power Up */
 //		pwrUp(nrfStruct);
-		sendString("\n\rExecuted 1st command.", &huart2);
+		sendString("\n\rExecuted 1st command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 1:
 //		pwrDown(nrfStruct);
-		sendString("\n\rExecuted 2nd command.", &huart2);
+		sendString("\n\rExecuted 2nd command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 2:
-		sendString("\n\rExecuted 3rd command.", &huart2);
+		sendString("\n\rExecuted 3rd command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 3:
-		sendString("\n\rExecuted 4th command.", &huart2);
+		sendString("\n\rExecuted 4th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 4:
-		sendString("\n\rExecuted 5th command.", &huart2);
+		sendString("\n\rExecuted 5th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 5:
-		sendString("\n\rExecuted 6th command.", &huart2);
+		sendString("\n\rExecuted 6th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 6:
-		sendString("\n\rExecuted 7th command.", &huart2);
+		sendString("\n\rExecuted 7th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 7:
-		sendString("\n\rExecuted 8th command.", &huart2);
+		sendString("\n\rExecuted 8th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 8:
-		sendString("\n\rExecuted 9th command.", &huart2);
+		sendString("\n\rExecuted 9th command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 9:
-		sendString("\n\rExecuted change of RF channel.", &huart2); //log
+		sendString("\n\rExecuted change of RF channel.", nRF_UartStruct->nrfUartStruct);	//log
 		HAL_Delay(50);
 		return 9;
 		break;
 	default:
-		sendString("\n\rInvalid command.", &huart2);
+		sendString("\n\rInvalid command.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return -1;
 		break;
