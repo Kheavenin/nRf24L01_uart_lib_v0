@@ -59,7 +59,7 @@ typedef struct {
 
 	uint8_t uartIrqFlag;
 	uint8_t uartPromptFlag;
-
+	uint8_t uartNrfChannel;
 	char uartTxBuffer[UART_BUFFER_SIZE_TX];
 	char uartRxBuffer[UART_BUFFER_SIZE_RX];
 	char uartTemporaryBuffer[UART_BUFFER_SIZE_TMP];
@@ -70,10 +70,11 @@ typedef struct {
 nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 		UART_HandleTypeDef *huart);
 
-uint8_t nrfMode(nRF_UartStruct_t *nRF_UartStruct);
+uint8_t nrfModeEnter(nRF_UartStruct_t *nRF_UartStruct);
+uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct);
 
 /* Functions's prototypes */
-int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
+int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
 		const char *str);
 int8_t detectCommand(const char *str);
 int8_t channelDetect(const char *str);

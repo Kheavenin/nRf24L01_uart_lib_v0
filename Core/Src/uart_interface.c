@@ -34,32 +34,6 @@ const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel };
 
-uint8_t nrfModeEnter(nRF_UartStruct_t *nRF_UartStruct) {
-	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfEnter) != NULL) {
-		nRF_UartStruct->uartPromptFlag = 1;
-		/*
-		sendString(nrfPrompt, &huart2);
-		HAL_Delay(10);
-		sendString("\n\rnRF24L01 access available\n", &huart2);
-		 */
-		return 1;
-	}
-	return 0;
-}
-
-uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct) {
-	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfExit) != NULL) {
-		nRF_UartStruct->uartPromptFlag = 0;
-		/*
-		sendString(nrfPrompt, &huart2);
-		HAL_Delay(10);
-		sendString("nRF24L01 access not available\n", &huart2);
-		 */
-		return 1;
-	}
-	return 0;
-}
-
 /* Create struct */
 nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 		UART_HandleTypeDef *huart) {
@@ -73,6 +47,7 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 
 	pnrfUartStruct->uartIrqFlag = 0;
 	pnrfUartStruct->uartPromptFlag = 0;
+	pnrfUartStruct->uartNrfChannel = 0;
 
 	resetChar(pnrfUartStruct->uartTxBuffer, UART_BUFFER_SIZE_TX);
 	resetChar(pnrfUartStruct->uartRxBuffer, UART_BUFFER_SIZE_RX);
@@ -80,6 +55,43 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 
 	return pnrfUartStruct;
 }
+
+/* Enter to nRF mode */
+uint8_t nrfModeEnter(nRF_UartStruct_t *nRF_UartStruct) {
+	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfEnter) != NULL) {
+		nRF_UartStruct->uartPromptFlag = 1;
+		/*
+		sendString(nrfPrompt, &huart2);
+		HAL_Delay(10);
+		sendString("\n\rnRF24L01 access available\n", &huart2);
+		 */
+		return 1;
+	}
+	return 0;
+}
+
+/* Exit nRF mode */
+uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct) {
+	if (strstr(nRF_UartStruct->uartTemporaryBuffer, nrfExit) != NULL) {
+		nRF_UartStruct->uartPromptFlag = 0;
+		/*
+		sendString(nrfPrompt, &huart2);
+		HAL_Delay(10);
+		sendString("nRF24L01 access not available\n", &huart2);
+		 */
+		return 1;
+	}
+	return 0;
+}
+
+/* Detect and execute commands (others than Exit and Enter) */
+uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct) {
+	int8_t commandNumber = detectCommand(nRF_UartStruct->uartTemporaryBuffer);
+	if (commandNumber > 0) {
+		executeCommand(nRF_UartStruct->nrfStruct, commandNumber, str);
+	}
+}
+
 
 /* Functions's bodies */
 int8_t detectCommand(const char *str) {
@@ -89,13 +101,39 @@ int8_t detectCommand(const char *str) {
 	uint8_t i;
 	for (i = 0; i < COMMAND_TABLE_SIZE; i++) {
 		if (strstr(str, nrfCommandTable[i]) != NULL) {
+			/* If it's change channel command read channel number */
+			if (i == 8) {
+				/* Wrong channel's number */
+				if (channelDetect(str) == -1)
+					return -1;
+			}
 			return i;
 		}
 	}
 	return -1;
 }
 
-int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
+int8_t channelDetect(const char *str) {
+	if (strlen(str) < 9) {
+		return -1;
+	}
+
+	/* Find position of command in string */
+	char chNum[4];
+	/* strlen(nrfCommandTable[9])is offset of command  "#nrf-ch-" ,  necessary to find number of channel */
+	strncpy(chNum,
+			(strstr(str, nrfCommandTable[9]) + strlen(nrfCommandTable[9])), 3);
+	int8_t channel = atoi(chNum);	//conversion string channel number to u_int
+
+	/* Check channel number*/
+	if (channel > 125 || channel < 0) {
+		return -1;
+	}
+
+	return channel;
+}
+
+int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
 		const char *str) {
 	switch (commandNumber) {
 	case 0:
@@ -148,12 +186,6 @@ int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 		break;
 	case 9:
 		sendString("\n\rExecuted change of RF channel.", &huart2); //log
-		int8_t channel = channelDetect(str);
-		if (channel != -1) {
-			//change channel command
-			return 1;
-		}
-
 		HAL_Delay(50);
 		return 0;
 		break;
@@ -167,25 +199,10 @@ int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t commandNumber,
 	return 0;
 }
 
-int8_t channelDetect(const char *str) {
-	if (strlen(str) < 9) {
-		return -1;
-	}
 
-	/* Find position of command in string */
-	/* strlen(nrfCommandTable[9])is offset of command  "#nrf-ch-" ,  necessary to find number of channel */
-	char chNum[4];
-	strncpy(chNum,
-			(strstr(str, nrfCommandTable[9]) + strlen(nrfCommandTable[9])), 3);
-	int8_t channel = atoi(chNum);	//conversion string channel number to u_int
 
-	/* Check channel number*/
-	if (channel > 125 || channel < 0) {
-		return -1;
-	}
 
-	return channel;
-}
+
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	if (size <= 0) {
@@ -197,7 +214,6 @@ uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	}
 	return 1;
 }
-
 
 void sendString(const char *str, UART_HandleTypeDef *huart) {
 	HAL_UART_Transmit_IT(huart, (uint8_t*) str, strlen(str));
