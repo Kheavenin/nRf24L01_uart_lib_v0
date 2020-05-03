@@ -86,12 +86,17 @@ uint8_t nrfModeExit(nRF_UartStruct_t *nRF_UartStruct) {
 
 /* Detect and execute commands (others than Exit and Enter) */
 uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct) {
+	/* Find command */
 	int8_t commandNumber = detectCommand(nRF_UartStruct,
 			nRF_UartStruct->uartTemporaryBuffer);
+	/* Execute command */
 	if (commandNumber > 0) {
 		executeCommand(nRF_UartStruct->nrfStruct, commandNumber,
 				nRF_UartStruct->uartTemporaryBuffer);
+
+		return 1;
 	}
+	return -1;
 }
 
 
@@ -106,7 +111,7 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 			/* If it's change channel command read channel number */
 			if (i == 8) {
 				/* Wrong channel's number */
-				if (channelDetect(nRF_UartStruct, str) == -1)
+				if (detectChannel(nRF_UartStruct, str) == -1)
 					return -1;
 			}
 			return i;
@@ -115,7 +120,7 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	return -1;
 }
 
-int8_t channelDetect(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
+int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	if (strlen(str) < 9) {
 		return -1;
 	}
@@ -190,12 +195,12 @@ int8_t executeCommand(nrfStruct_t *nrfStruct, uint8_t cmdNum,
 	case 9:
 		sendString("\n\rExecuted change of RF channel.", &huart2); //log
 		HAL_Delay(50);
-		return 0;
+		return 9;
 		break;
 	default:
 		sendString("\n\rInvalid command.", &huart2);
 		HAL_Delay(50);
-		return 0;
+		return -1;
 		break;
 	}
 
