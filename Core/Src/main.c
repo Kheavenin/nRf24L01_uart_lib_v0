@@ -55,8 +55,6 @@
 /* Variables */
 volatile uint8_t *uartGlobalFlagIT = NULL;
 
-volatile uint8_t uartPromptFlag = 0;
-volatile uint8_t uartRx_flag = 0;
 
 /* Buffer, arrays */
 char uartTransmitBuffer[UART_BUFFER_SIZE_TX];

@@ -107,7 +107,7 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	for (i = 0; i < COMMAND_TABLE_SIZE; i++) {
 		if (strstr(str, nrfCommandTable[i]) != NULL) {
 			/* If it's change channel command read channel number */
-			if (i == 8) {
+			if (i == 9) {
 				/* Wrong channel's number */
 				if (detectChannel(nRF_UartStruct, str) == -1)
 					return -1;
@@ -143,65 +143,79 @@ int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
 	switch (cmdNum) {
 	case 0:
 		/* Execute Power Up */
-//		pwrUp(nrfStruct);
-		sendString("\n\rExecuted 1st command.", nRF_UartStruct->nrfUartStruct);
+		pwrUp(nRF_UartStruct->nrfStruct);
+		sendString("\n\rnRF24L01 module power up.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 0;
 		break;
 	case 1:
-//		pwrDown(nrfStruct);
-		sendString("\n\rExecuted 2nd command.", nRF_UartStruct->nrfUartStruct);
+		/* Execute Power Down */
+		pwrDown(nRF_UartStruct->nrfStruct);
+		sendString("\n\rnRF24L01 module power down.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return 1;
 		break;
 	case 2:
-		sendString("\n\rExecuted 3rd command.", nRF_UartStruct->nrfUartStruct);
+		/* Set power 0dBm */
+		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_0dBm);
+		sendString("\n\rSet RF power 0dBm.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 2;
 		break;
 	case 3:
-		sendString("\n\rExecuted 4th command.", nRF_UartStruct->nrfUartStruct);
+		/* Set power -6dBm */
+		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_6dBm);
+		sendString("\n\rSet RF power -6dBm.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 3;
 		break;
 	case 4:
-		sendString("\n\rExecuted 5th command.", nRF_UartStruct->nrfUartStruct);
+		/* Set power -12dBm */
+		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_12dBm);
+		sendString("\n\rSet RF power -12dBm.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 4;
 		break;
 	case 5:
-		sendString("\n\rExecuted 6th command.", nRF_UartStruct->nrfUartStruct);
+		/* Set power -18dBm */
+		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_18dBm);
+		sendString("\n\rSet RF power -18dBm.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 5;
 		break;
 	case 6:
-		sendString("\n\rExecuted 7th command.", nRF_UartStruct->nrfUartStruct);
+		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_250);
+		sendString("\n\rSet data rate 250kBps.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 6;
 		break;
 	case 7:
-		sendString("\n\rExecuted 8th command.", nRF_UartStruct->nrfUartStruct);
+		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_1M);
+		sendString("\n\rSet data rate 250kBps.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 7;
 		break;
 	case 8:
-		sendString("\n\rExecuted 9th command.", nRF_UartStruct->nrfUartStruct);
+		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_2M);
+		sendString("\n\rSet data rate 250kBps.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
-		return 1;
+		return 8;
 		break;
 	case 9:
-		sendString("\n\rExecuted change of RF channel.", nRF_UartStruct->nrfUartStruct);	//log
+		/* Set channel */
+		setChannel(nRF_UartStruct->nrfStruct, nRF_UartStruct->uartNrfChannel);
+		sendString("\n\rSet RF channel.", nRF_UartStruct->nrfUartStruct);	//log
 		HAL_Delay(50);
 		return 9;
 		break;
 	default:
-		sendString("\n\rInvalid command.", nRF_UartStruct->nrfUartStruct);
+		sendString("\n\rInvalid command number.", nRF_UartStruct->nrfUartStruct);
 		HAL_Delay(50);
 		return -1;
 		break;
 	}
 
-	return 0;
+	return -1;
 }
 
 
