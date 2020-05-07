@@ -30,7 +30,7 @@
 #define UART_READ_SIZE 14
 
 #define MINIMUM_COMMAND_SIZE 9 //8
-#define COMMAND_TABLE_SIZE 10
+#define COMMAND_TABLE_SIZE 11  //added read register
 
 /* Extern */
 //extern UART_HandleTypeDef huart2;
@@ -61,7 +61,11 @@ typedef struct {
 
 	volatile uint8_t uartIrqFlag;
 	volatile uint8_t uartPromptFlag;
+
 	uint8_t uartNrfChannel;
+	uint8_t uartNrfReadReg;
+	uint8_t uartNrfWriteReg;
+
 	char uartTxBuffer[UART_BUFFER_SIZE_TX];
 	char uartRxBuffer[UART_BUFFER_SIZE_RX];
 	char uartTemporaryBuffer[UART_BUFFER_SIZE_TMP];
