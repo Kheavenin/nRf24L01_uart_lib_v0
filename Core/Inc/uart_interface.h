@@ -65,6 +65,7 @@ typedef struct {
 	uint8_t uartNrfChannel;
 	uint8_t uartNrfReadReg;
 	uint8_t uartNrfWriteReg;
+	uint8_t uartNrfWriteVal;
 
 	char uartTxBuffer[UART_BUFFER_SIZE_TX];
 	char uartRxBuffer[UART_BUFFER_SIZE_RX];
@@ -84,6 +85,8 @@ uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct);
 int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum);
 int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str);
+int8_t detectAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str);
+
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
 

@@ -50,7 +50,11 @@ nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
 
 	pnrfUartStruct->uartIrqFlag = 0;
 	pnrfUartStruct->uartPromptFlag = 0;
+
 	pnrfUartStruct->uartNrfChannel = 0;
+	pnrfUartStruct->uartNrfReadReg = 0;
+	pnrfUartStruct->uartNrfWriteReg = 0;
+	pnrfUartStruct->uartNrfWriteVal = 0;
 
 	resetChar(pnrfUartStruct->uartTxBuffer, UART_BUFFER_SIZE_TX);
 	resetChar(pnrfUartStruct->uartRxBuffer, UART_BUFFER_SIZE_RX);
@@ -128,9 +132,19 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 int8_t detectAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	if (strlen(str) <= 11) {
 		return -1;
+	}
+	/* Find position of command in string */
+	char chNum[4];
+	strncpy(chNum, (strstr(str, nrfCommandTable[10]) + strlen(nrfCommandTable[10])), 5);
+	uint8_t addr = atoi(chNum);
 
+	/* Check address  */
+	if (addr < 0x00 || addr > 0x1D) {
+		return -1;
 	}
 
+	nRF_UartStruct->uartNrfReadReg = addr;
+	return addr;
 }
 
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
@@ -140,8 +154,7 @@ int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	/* Find position of command in string */
 	char chNum[4];
 	/* strlen(nrfCommandTable[9])is offset of command  "#nrf-ch-" ,  necessary to find number of channel */
-	strncpy(chNum,
-			(strstr(str, nrfCommandTable[9]) + strlen(nrfCommandTable[9])), 3);
+	strncpy(chNum, (strstr(str, nrfCommandTable[9]) + strlen(nrfCommandTable[9])), 3);
 	int8_t channel = atoi(chNum);	//conversion string channel number to u_int
 
 	/* Check channel number*/
