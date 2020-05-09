@@ -27,10 +27,10 @@
 #define UART_BUFFER_SIZE_RX 24
 #define UART_BUFFER_SIZE_TMP 24
 
-#define UART_READ_SIZE 14
+#define UART_READ_SIZE 16
 
 #define MINIMUM_COMMAND_SIZE 9 //8
-#define COMMAND_TABLE_SIZE 11  //added read register
+#define COMMAND_TABLE_SIZE 12  //added read register
 
 /* Extern */
 //extern UART_HandleTypeDef huart2;
@@ -85,7 +85,7 @@ uint8_t nrfModeCommand(nRF_UartStruct_t *nRF_UartStruct);
 int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum);
 int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str);
-int8_t detectAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str);
+int8_t detectReadAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);

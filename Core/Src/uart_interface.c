@@ -26,7 +26,8 @@ const char nrfDataRate2Mbps[] = { "#nrf-rate-2" };			//size 12 with \0
 
 const char nrfChannel[] = { "#nrf-ch-" };//size 9 with \0 + 3 signs of channel
 
-const char nrfReadRegister[] = { "#nrf-read-" }; //size 11 with \0 +
+const char nrfReadRegister[] = { "#nrf-read-" }; //size 11 with \0 + 4  format: #nrf-read-0x01
+const char nrfWriteRegister[] = { "#nrf-write-" }; //size 12 with \0	format: #nrf-write-0x01
 
 const char nrfEnter[] = { "#nrf-enter" };		//size 11 with \0
 const char nrfExit[] = { "#nrf-exit" };			//size 10 with \0
@@ -35,7 +36,7 @@ const char nrfPrompt[] = { "\n\r#nrf> " };
 const char *nrfCommandTable[COMMAND_TABLE_SIZE] = { nrfPowerUp, nrfPowerDown,
 		nrfPowerTx0dBm, nrfPowerTx6dBm, nrfPowerTx12dBm, nrfPowerTx18dBm,
 		nrfDataRate250kbps, nrfDataRate1Mbps, nrfDataRate2Mbps, nrfChannel,
-		nrfReadRegister };
+		nrfReadRegister, nrfWriteRegister };
 
 /* Create struct */
 nRF_UartStruct_t* nRF_UartInit(nrfStruct_t *nrfStruct,
@@ -118,10 +119,11 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 				/* Wrong channel's number */
 				if (detectChannel(nRF_UartStruct, str) == -1)
 					return -1;
-
 			}
 			if (i == 10) {
-				//detect read reg
+				/* Wrong address to read */
+				if (detectReadAddress(nRF_UartStruct, str) == -1)
+					return -1;
 			}
 			return i;
 		}
@@ -129,8 +131,8 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	return -1;
 }
 
-int8_t detectAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
-	if (strlen(str) <= 11) {
+int8_t detectReadAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
+	if (strlen(str) <= 14) {
 		return -1;
 	}
 	/* Find position of command in string */
@@ -173,73 +175,85 @@ int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
 		/* Execute Power Up */
 		pwrUp(nRF_UartStruct->nrfStruct);
 		sendString("\n\rnRF24L01 module power up.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 0;
 		break;
 	case 1:
 		/* Execute Power Down */
 		pwrDown(nRF_UartStruct->nrfStruct);
 		sendString("\n\rnRF24L01 module power down.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 1;
 		break;
 	case 2:
 		/* Set power 0dBm */
 		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_0dBm);
 		sendString("\n\rSet RF power 0dBm.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 2;
 		break;
 	case 3:
 		/* Set power -6dBm */
 		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_6dBm);
 		sendString("\n\rSet RF power -6dBm.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 3;
 		break;
 	case 4:
 		/* Set power -12dBm */
 		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_12dBm);
 		sendString("\n\rSet RF power -12dBm.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 4;
 		break;
 	case 5:
 		/* Set power -18dBm */
 		setRFpower(nRF_UartStruct->nrfStruct, RF_PWR_18dBm);
 		sendString("\n\rSet RF power -18dBm.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 5;
 		break;
 	case 6:
+		/* Set 250kbps data rate */
 		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_250);
 		sendString("\n\rSet data rate 250kBps.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 6;
 		break;
 	case 7:
+		/* Set 1Mbps data rate */
 		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_1M);
 		sendString("\n\rSet data rate 1Mbps.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 7;
 		break;
 	case 8:
+		/* Set 2Mbps data rate */
 		setDataRate(nRF_UartStruct->nrfStruct, RF_DataRate_2M);
 		sendString("\n\rSet data rate 2Mbps.", nRF_UartStruct->nrfUartStruct);
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 8;
 		break;
 	case 9:
 		/* Set channel */
 		setChannel(nRF_UartStruct->nrfStruct, nRF_UartStruct->uartNrfChannel);
 		sendString("\n\rSet RF channel.", nRF_UartStruct->nrfUartStruct);	//log
-		HAL_Delay(50);
+		HAL_Delay(5);
 		return 9;
 		break;
 	case 10:
 		/* read nRF register */
 		sendString("\n\rRead nRF register.", nRF_UartStruct->nrfUartStruct);	//log
+		HAL_Delay(5);
+		/* In this line execute read nRF's register */
 		return 10;
+		break;
+	case 11:
+		/* Write nRF register */
+		sendString("\n\rWrite nRF register.", nRF_UartStruct->nrfUartStruct);	//log
+		HAL_Delay(5);
+		/* In this line execute write to nRF's register */
+		return 11;
 		break;
 	default:
 		sendString("\n\rInvalid command number.", nRF_UartStruct->nrfUartStruct);
@@ -247,7 +261,7 @@ int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
 		return -1;
 		break;
 	}
-
+	/* Switch end */
 	return -1;
 }
 
