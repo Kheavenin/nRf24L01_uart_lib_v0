@@ -125,28 +125,22 @@ int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 				if (detectReadAddress(nRF_UartStruct, str) == -1)
 					return -1;
 			}
+			if (i == 11) {
+				if (detectWriteAddress(nRF_UartStruct, str) == -1) {
+					return -1;
+				}
+				/* write value to read */
+				sendString("\n\rWrite value to read.", nRF_UartStruct->nrfUartStruct);
+				HAL_Delay(1);
+				sendString(nrfPrompt, nRF_UartStruct->nrfUartStruct);
+				HAL_Delay(1);
+
+			}
+
 			return i;
 		}
 	}
 	return -1;
-}
-
-int8_t detectReadAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
-	if (strlen(str) <= 14) {
-		return -1;
-	}
-	/* Find position of command in string */
-	char chNum[4];
-	strncpy(chNum, (strstr(str, nrfCommandTable[10]) + strlen(nrfCommandTable[10])), 5);
-	uint8_t addr = atoi(chNum);
-
-	/* Check address  */
-	if (addr < 0x00 || addr > 0x1D) {
-		return -1;
-	}
-
-	nRF_UartStruct->uartNrfReadReg = addr;
-	return addr;
 }
 
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
@@ -167,6 +161,46 @@ int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
 	nRF_UartStruct->uartNrfChannel = channel;
 
 	return channel;
+}
+
+int8_t detectReadAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
+	if (strlen(str) <= 14) {
+		return -1;
+	}
+	/* Find position of command in string */
+	char chNum[5];
+	strncpy(chNum, (strstr(str, nrfCommandTable[10]) + strlen(nrfCommandTable[10])), 4);
+	uint8_t addr = atoi(chNum);
+
+	/* Check address  */
+	if (addr < 0x00 || addr > 0x1D) {
+		return -1;
+	}
+
+	nRF_UartStruct->uartNrfReadReg = addr;
+	return addr;
+}
+
+int8_t detectWriteAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
+	if (strlen(str) <= 15) {
+		return -1;
+	}
+	/* Find position of command in string */
+	char chNum[5];
+	strncpy(chNum, (strstr(str, nrfCommandTable[11]) + strlen(nrfCommandTable[11])), 4);
+	uint8_t addr = atoi(chNum);
+
+	/* Check address  */
+	if (addr < 0x00 || addr > 0x1D) {
+		return -1;
+	}
+
+	nRF_UartStruct->uartNrfWriteReg = addr;
+	return addr;
+}
+
+int8_t detectWriteValue(nRF_UartStruct_t *nRF_UartStruct, const char *str) {
+	return -1;
 }
 
 int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
@@ -264,11 +298,6 @@ int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum) {
 	/* Switch end */
 	return -1;
 }
-
-
-
-
-
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart) {
 	if (size <= 0) {

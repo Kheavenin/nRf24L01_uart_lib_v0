@@ -86,6 +86,7 @@ int8_t executeCommand(nRF_UartStruct_t *nRF_UartStruct, uint8_t cmdNum);
 int8_t detectCommand(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 int8_t detectChannel(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 int8_t detectReadAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str);
+int8_t detectWriteAddress(nRF_UartStruct_t *nRF_UartStruct, const char *str);
 
 
 uint8_t sendBuffer(uint8_t *buffer, size_t size, UART_HandleTypeDef *huart);
